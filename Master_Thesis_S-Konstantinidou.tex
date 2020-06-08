@@ -1,0 +1,133 @@
+
+\documentclass[12pt,a4paper,notitlepage,twoside,openright]{report}
+%\documentclass[12pt,a4paper,draft,notitlepage,twoside,openright]{report}
+
+%Libraries for greek
+\usepackage{xltxtra}
+%\usepackage{xgreek} 
+\setmainfont[Mapping=tex-text]{Times New Roman}
+%\usepackage{cmap}
+%\usepackage{ucs}
+%\usepackage{kerkis}
+%\usepackage[english,greek]{babel}
+\usepackage[utf8x]{inputenc}
+
+\usepackage[colorlinks=true]{hyperref} 					%hyperlinks
+\hypersetup{linkcolor=blue,citecolor=blue,linktoc=page} %hyperlink options
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\raggedbottom % disables vertical alignment & stretching
+\setlength\parindent{0pt} %me auto den exw esoxes se kamia paragrafo (diladi noindent pantou)
+\usepackage[parfill]{parskip}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\normalfont\Huge\bfseries}{\chaptertitlename\ \thechapter}{15pt}{\Huge}
+\titlespacing{\chapter}{0pt}{40pt}{21pt}
+\titlespacing{\section}{0pt}{0pt}{0pt}
+\titlespacing{\subsection}{0pt}{0pt}{0pt}
+\titlespacing{\subsubsection}{0pt}{0pt}{0pt}
+\usepackage{tocloft}
+%\recommand\cftchapafterpnum{\vskip5pt}
+
+\usepackage{fancyhdr} %control of page headers and footers- me auto vazw tis eutheies grammes panw kai katw stis selides
+\renewcommand{\footrulewidth}{0.4pt}
+%\lhead[\rm \bf \thepage]{\fancyplain{}{\sl{\rightmark}}}
+\rhead{\rm \bf \thepage}{\fancyplain{}{\sl{\leftmark }}}
+\chead{}\lfoot{}\rfoot{}\cfoot{}
+
+\usepackage{graphicx}
+\usepackage{amsmath} %extra math
+\usepackage{mathtools}
+\usepackage{amssymb} %extra symbols
+\usepackage{gensymb}
+\usepackage{breqn}  %break equations
+\usepackage[notlof,notlot,nottoc]{tocbibind} %bibliography is not a numbered chapter
+\usepackage{fixltx2e} %gia na grafw textsuperscript + textsubscript
+\usepackage{enumitem} %gia to itemize
+\usepackage{relsize} %gia \mathlarger + \mathsmaller
+\usepackage{subcaption}
+\usepackage{mwe}
+\usepackage{siunitx} %gia na xrisimopoiisw to \ang{360}--> gia na valei to symvolo twn moirwn (degree)
+\usepackage{textcomp}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode} %gia pseudokwdika- otan thelw na perigrapsw kai kala code
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\usepackage{xr}
+\usepackage{adjustbox} %auto prepei na kathorizei kai an einai i current page odd or even
+\usepackage[margin=4pt,font=normalsize,labelfont=bf,textfont=it]{caption}
+%\usepackage{subcaption}
+%\usepackage{sidecap}
+\usepackage{float}
+\usepackage{ragged2e} %gia na kanei fully justified text
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+\usepackage{color} 								%hilight pachage
+\usepackage[dvipsnames]{xcolor}
+\newcommand{\hilight}[1]{\colorbox{yellow}{#1}} %hilight color
+
+\usepackage[hang,flushmargin]{footmisc} %a range of footnote options - noindent
+\usepackage[normalem]{ulem} %Gia na kanw underline kapoio text
+
+\renewcommand{\figurename}{Fig.} %Ti leei otan vazw eikones (Fig.1 ...)
+\renewcommand{\contentsname}{Table of Contents}
+\renewcommand{\chaptername}{Chapter}
+\renewcommand{\tablename}{Capt.} %Ti leei otan vazw tables (Capt.1 ...)
+
+%% FOR MATLAB CODE
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+\renewcommand\bibname{References} %If I don't use it, then instead of the name "References", it will say "Bibliography"
+
+
+\begin{document}
+\include{Cover_Master_Thesis_S-Konstantinidou}
+\include{Chapter_1}
+\include{Chapter_2}
+%\include{Chapter_3}
+\include{Chapter_4}
+\include{Chapter_5}
+\include{Chapter_6}
+
+\newpage
+%\chapter*{References}
+%\lhead{\emph{References}}
+%\label{ref}
+
+\chapter*{List of acronyms}
+\addcontentsline{toc}{chapter}{List of acronyms}
+
+\begin{thebibliography}{100}
+\bigskip
+
+\bibitem{Belward 2015} Belward AS, Skøien JO (2015) Who launched what, when and why; trends in global land-cover observation capacity from civilian earth observation satellites. ISPRS Journal of Photogrammetry and Remote Sensing, May; 103: 115–128.
+\bibitem{Committee 2019} Committee on the Peaceful Uses of Outer Space (2019) The “Space2030” Agenda: Space as a driver of sustainable development, Vienna, Report No.: 28th.
+\bibitem{ESA 2019} ESA Space Debris Office - ESOC, (Jul 2019) ESA’s Annual Space Environment Report [Internet]. Report No.: 3.2, p. 78. Available from: https://www.sdo.esoc.esa.int/environment_report/Space_Environment_Report_latest.pdf
+\bibitem{IADC 2007} Inter-Agency Space Debris Coordinate Committee (IADC) -  Steering Group and Working Group 4 (2007) IADC Space Debris Mitigation Guidelines [Internet]. Report No.: 22.4. Revision 1 Available from: https://www.unoosa.org/documents/pdf/spacelaw/sd/IADC-2002-01-IADC-Space_Debris-Guidelines-Revision1.pdf
+\bibitem{Letizia 2019} Letizia F, Lemmens S, Bastida Virgili B, Krag H. (2019) Application of a debris index for global evaluation of mitigation strategies. Acta Astronautica. 161:348–62.
+\bibitem{Kelso 2009} Kelso TS. (2009) Analysis and Implications of the Iridium 33-Cosmos 2251 Collision. InAdvanced Maui Optical and Space Surveillance Technologies Conference
+\bibitem{Klinkrad 2006} Klinkrad H. (2006) Space Debris: Models and Risk Analysis. Springer Verlag, 1st ed., p.430
+\bibitem{Kramer 2002} Kramer H. (2002) Observation of the Earth and its Environment [Internet]. Springer Verlag, 4th ed., p.1514, Updated version: Apr, 2020 Available from: https://directory.eoportal.org/web/eoportal/kramer
+\bibitem{Somma 2019} Somma GL, Lewis HG, Colombo C. (2019) Sensitivity analysis of launch activities in Low Earth Orbit. Acta Astronautica, 158:129–39.
+\bibitem{UCS} Union of Concerned Scientists (2020) UCS Satellite Database [Internet]. Published: Dec 8, 2005. Updated: Apr 1, 2020. Available from: https://www.ucsusa.org/resources/satellite-database
+
+
+%The easiest thing in Zotero --> Ctrl + A, right-click, Create bibliography from items, Copy to Clipboard and then, copy paste to all of the \bibitem and the {...} for the citation.
+
+\end{thebibliography}
+
+
+\newpage
+\chapter*{Appendices}
+\lhead{\emph{Appendices}}
+\label{app}
+\addcontentsline{toc}{chapter}{Appendices}
+\end{document}
