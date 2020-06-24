@@ -87,6 +87,10 @@
 
 \renewcommand\bibname{References} %If I don't use it, then instead of the name "References", it will say "Bibliography"
 
+%Package for list of acronym in the end of the document
+\usepackage{enumitem}
+\newlist{abbrv}{itemize}{1}
+\setlist[abbrv,1]{label=,labelwidth=1in,align=parleft,itemsep=0.1\baselineskip,leftmargin=!}
 
 \begin{document}
 \include{Cover_Master_Thesis_S-Konstantinidou}
@@ -102,22 +106,65 @@
 %\lhead{\emph{References}}
 %\label{ref}
 
+
+
 \chapter*{List of acronyms}
 \addcontentsline{toc}{chapter}{List of acronyms}
+\begin{abbrv}
+% American Institute of Aeronautics and Astronautics (AIAA)
+\item[\textit{EO}] Earth Observation
+\item[\textit{GEO}] Geostationary Orbit / Geosynchronous Equatorial Orbit
+\item[\textit{GEOSS}] Global Earth Observation System of Systems
+\item[\textit{IADC}] Inter-Agency Space Debris Coordination Committee
+\item[\textit{ISO}] International Organization for Standardization
+\item[\textit{ISS}] International Space Station
+\item[\textit{LE}] London Economics
+\item[\textit{LEO}] Low Earth Orbit
+\item[\textit{MELVO}] Moderately Elliptical Very Low Orbit
+\item[\textit{ODCWG}] Orbital Debris Co-ordination Working Group
+\item[\textit{OECD}] Organization for Economic Co-operation and Development
+\item[\textit{SSR}] Space Sustainability Rating
+\item[\textit{UNCOPUOUS}] United Nations Committee on the Peaceful Uses of Outer Space
+\item[\textit{UNOOSA}] United Nations Office for Outer Space Affairs
+\item[\textit{WEF}] World Economic Forum
+\end{abbrv}
+
 
 \begin{thebibliography}{100}
 \bigskip
 
 \bibitem{Belward 2015} Belward AS, Skøien JO (2015) Who launched what, when and why; trends in global land-cover observation capacity from civilian earth observation satellites. ISPRS Journal of Photogrammetry and Remote Sensing, May; 103: 115–128.
+\bibitem{Amazon} Boyle A (April 4, 2019) Amazon to offer broadband access from orbit with 3,236-satellite ‘Project Kuiper’ constellation. GeekWire. Available at: https://www.geekwire.com/2019/amazon-project-kuiper-broadband-satellite/
+\bibitem{Cadman} Cadman J (May 18, 2020) Op-ed | An unexpected effect: the industry’s recent challenges prove the importance of space. Space News. Available at: https://spacenews.com/op-ed-an-unexpected-effect-the-industrys-recent-challenges-prove-the-importance-of-space/
 \bibitem{Committee 2019} Committee on the Peaceful Uses of Outer Space (2019) The “Space2030” Agenda: Space as a driver of sustainable development, Vienna, Report No.: 28th.
-\bibitem{ESA 2019} ESA Space Debris Office - ESOC, (Jul 2019) ESA’s Annual Space Environment Report [Internet]. Report No.: 3.2, p. 78. Available from: https://www.sdo.esoc.esa.int/environment_report/Space_Environment_Report_latest.pdf
-\bibitem{IADC 2007} Inter-Agency Space Debris Coordinate Committee (IADC) -  Steering Group and Working Group 4 (2007) IADC Space Debris Mitigation Guidelines [Internet]. Report No.: 22.4. Revision 1 Available from: https://www.unoosa.org/documents/pdf/spacelaw/sd/IADC-2002-01-IADC-Space_Debris-Guidelines-Revision1.pdf
+\bibitem{Anti-satellite} David L (Feb 2, 2007) China's Anti-Satellite Test: Worrisome Debris Cloud Circles Earth. SPACE.com [Internet] Available at: https://www.space.com/3415-china-anti-satellite-test-worrisome-debris-cloud-circles-earth.html
+\bibitem{Erwin} Erwin S (May 18, 2020) SpaceX rideshare program putting downward pressure on prices [Internet]. Space News. Available at: https://spacenews.com/spacex-rideshare-program-putting-downward-pressure-on-prices/
+\bibitem{ESA 2019} ESA Space Debris Office - ESOC, (Jul 2019) ESA’s Annual Space Environment Report [Internet]. Report No.: 3.2, p. 78. Available at: https://www.sdo.esoc.esa.int/environment_report/Space_Environment_Report_latest.pdf
+\bibitem{LE_Esteve} Esteve R (2020) Earth Observation: a tool for a more resilient and sustainable world? London Economics: Space In Focus, Issue 2
+\bibitem{Space sustainability} Foust J (May 7, 2019) Consortium to develop “space sustainability” rating system. Space News. Available at: https://spacenews.com/consortium-to-develop-space-sustainability-rating-system/
+\bibitem{Griffin} Griffin M (2010) Orbit/Spectrum Allocation Procedures. Space Services Department ITU Radiocommunication Bureau (BR) Conference of ITU in Bangkok, Thailand
+\bibitem{Hallex} Hallex MA, Cottom TS (2020) Proliferated Commercial Satellite Constellations - Implications for National Security. Joint Force Quarterly (JFQ) 97
+\bibitem{Viasat} Henry C (April 24, 2020) Viasat gets FCC approval for MEO constellation. Space News. Available at: https://spacenews.com/viasat-gets-fcc-approval-for-meo-constellation/
+\bibitem{IADC 2007} Inter-Agency Space Debris Coordinate Committee (IADC) -  Steering Group and Working Group 4 (2007) IADC Space Debris Mitigation Guidelines. Report No.: 22.4. Revision 1
+%Available at: https://www.unoosa.org/documents/pdf/spacelaw/sd/IADC-2002-01-IADC-Space_Debris-Guidelines-Revision1.pdf
+\bibitem{Kelso 2009} Kelso TS (2009) Analysis and Implications of the Iridium 33-Cosmos 2251 Collision. InAdvanced Maui Optical and Space Surveillance Technologies Conference
+\bibitem{Klinkrad 2006} Klinkrad H (2006) Space Debris: Models and Risk Analysis. Springer Verlag, 1st ed., p.430
+\bibitem{Klinkrad 2009} Klinkrad H, Johnson NL (2009) Space debris environment remediation concepts. 5th European Conference on Space Debris. In Darmstadt, Germany; (ESA SP-672). 
+\bibitem{Kramer 2002} Kramer H (2002) Observation of the Earth and its Environment. Springer Verlag, 4th ed., p.1514, Updated version: Apr, 2020 Available at: https://directory.eoportal.org/web/eoportal/kramer
+\bibitem{Newspace} Kulu E (2020) NewSpace Index - Overview of commercial satellite constellations. [Database] Available at: https://www.newspace.im/
 \bibitem{Letizia 2019} Letizia F, Lemmens S, Bastida Virgili B, Krag H. (2019) Application of a debris index for global evaluation of mitigation strategies. Acta Astronautica. 161:348–62.
-\bibitem{Kelso 2009} Kelso TS. (2009) Analysis and Implications of the Iridium 33-Cosmos 2251 Collision. InAdvanced Maui Optical and Space Surveillance Technologies Conference
-\bibitem{Klinkrad 2006} Klinkrad H. (2006) Space Debris: Models and Risk Analysis. Springer Verlag, 1st ed., p.430
-\bibitem{Kramer 2002} Kramer H. (2002) Observation of the Earth and its Environment [Internet]. Springer Verlag, 4th ed., p.1514, Updated version: Apr, 2020 Available from: https://directory.eoportal.org/web/eoportal/kramer
-\bibitem{Somma 2019} Somma GL, Lewis HG, Colombo C. (2019) Sensitivity analysis of launch activities in Low Earth Orbit. Acta Astronautica, 158:129–39.
-\bibitem{UCS} Union of Concerned Scientists (2020) UCS Satellite Database [Internet]. Published: Dec 8, 2005. Updated: Apr 1, 2020. Available from: https://www.ucsusa.org/resources/satellite-database
+\bibitem{Oneweb_bankruptcy} Malik T (March 28, 2020) OneWeb, a satellite internet startup, files for Chapter 11 bankruptcy. SPACE.com [Internet] Available at: https://www.space.com/oneweb-satellite-internet-startup-files-for-bankruptcy.html
+\bibitem{Satellogic} Mohney D (January 16, 2019) Satellogic signs launch contracts for 90 imaging satellites. Space It Bridge. Available at: https://www.spaceitbridge.com/satellogic-signs-launch-contracts-for-90-imaging-satellites.htm
+\bibitem{NASA} National Aeronautics and Space Administration (NASA) (2011) USA Space Debris Environment, Operations, and Policy Updates [Internet]. 48th Session of the Scientific and Technical Subcommittee Committee on the Peaceful Uses of Outer Space United Nations. Available from: https://www.unoosa.org/pdf/pres/stsc2011/tech-31.pdf
+\bibitem{Value UK} Sadlier G, Flytkjær R, Sabri F, Robin N. (2018) Value of satellite-derived Earth Observation capabilities to the UK Government today and by 2020 - Evidence from nine domestic civil use cases. UK: London Economics (LE).
+\bibitem{CNBC} Sheetz M (Jun 9, 2020) How Planet’s new satellite fleet will bring detailed images of places on Earth up to 12 times a day. Investing in Space - CNBC. Available at: https://www.cnbc.com/2020/06/09/planets-skysats-will-take-images-up-to-12-times-a-day-launched-with-help-of-spacex.html.
+\bibitem{Somma 2019} Somma GL, Lewis HG, Colombo C (2019) Sensitivity analysis of launch activities in Low Earth Orbit. Acta Astronautica, 158:129–39.
+\bibitem{pLEO} Taverney T (March 5, 2020) Op-ed | Proliferated LEO is risky but necessary. Space News. Available at: https://spacenews.com/op-ed-proliferated-leo-is-risky-but-necessary/
+\bibitem{UCS} Union of Concerned Scientists (2020) UCS Satellite Database [Internet]. Published: Dec 8, 2005. Updated: Apr 1, 2020. Available at: https://www.ucsusa.org/resources/satellite-database
+\bibitem{Undseth} Undseth M, Jolly C, Olivari M (2020) Space sustainability: The economics of space debris in perspective. OECD Science, Technology and Industry Policy Papers, No. 87, OECD Publishing, Paris
+\bibitem{UNOOSA} United Nations Office for Outer Space Affairs (2010) Space Debris Mitigation Guidelines of the Committee on the Peaceful Uses of Outer Space. Vienna; Available at: https://www.unoosa.org/pdf/publications/st_space_49E.pdf
+\bibitem{Hongyun} Zhao Lei (2018) China begins space-based broadband project. Jiuquan Satellite Launch Center | chinadaily.com.cn Available at: https://www.chinadaily.com.cn/a/201812/22/WS5c1d82d6a3107d4c3a002337.html
+
 
 
 %The easiest thing in Zotero --> Ctrl + A, right-click, Create bibliography from items, Copy to Clipboard and then, copy paste to all of the \bibitem and the {...} for the citation.
