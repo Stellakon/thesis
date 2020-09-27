@@ -8,6 +8,9 @@
 *.lof
 *.lot
 *.out
+*.ist
+*.glsdefs
+*.acn
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
