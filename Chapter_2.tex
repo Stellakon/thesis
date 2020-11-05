@@ -193,7 +193,7 @@ Additionally, another cooperation that has been actualized is between ESA's Cope
 % Cooperation between companies: Planet and Copernicus encourage people to use jointly their data (there is also the challenge “See change, change the world”) --> I don't think that it has the character of mitigating the problem of overpopulation etc. Or that the cooperate for this reason.
 
 \bigskip
-\section{Orbit and mission type in the current work}
+\section{Orbit and mission type focused in the current work}
 \bigskip
 
 As it was mentioned in Chapter \ref{chap:scope}, the main goal of this master thesis is the development of an application, which is focused on Low Earth Orbits in the field of Earth Observation. For this reason, the section below is comprised of the main attributes and important parameters of those two sectors.
@@ -210,7 +210,7 @@ The LEO is also a favorable spot for placing satellites for various reasons. It'
 
 The main areas that LEO is used are for remote sensing, earth observation, global positioning, navigation, human spaceflight, climate, weather forecast, military, and others. 
 
-\bigskip
+\pagebreak
 \subsubsection{LEO subcategories}
 \bigskip
 
@@ -225,77 +225,115 @@ The main areas that LEO is used are for remote sensing, earth observation, globa
 	\item Equatorial or tropical orbit: \\
 	The inclination of this orbit is zero or close to zero degrees. It provides close coverage of the tropical regions.
 	\item Polar or near-polar orbit: \\
-	
-	\item Sun-synchronous orbit
+	In such an orbit the inclination is 90 degrees or near 90 degrees, but necessarily larger than 60 degrees. The fact that the orbital plane is fixed and the Earth rotates beneath this plane makes the satellite to pass over the same area on the surface at regular intervals, since the orbital period is an integral multiple of the sidereal day. \cite{Campbell} \\ %Their orbit which is basically north-south with conjunction with the Earth's rotation (west-east), allows them to cover most of the Earth's surface over a certain period of time.
+	\\
+	A polar orbit has definitely some advantages, as they were mentioned previously. However, the choice of a certain altitude is determinant. A lower altitude results in:
+		\begin{itemize}
+		\item a shorter orbital period,
+		\item poorer coverage of the surface,
+		\item stronger return of signals,
+		\item better spatial resolution,
+		\item and greater drag and shorter lifetime.
+		\end{itemize}
+	\item Sun-synchronous orbit: \\
+	It is a special case of a near-polar orbit, since they cover each area of the world at a constant local time of the day, which is called local sun time. In other words, the plane of a satellite, which is in a sun-synchronous orbit (SSO) has always the same relation to the sun. However, a SSO is not fixed in space. It should move one degree per day in order to compensate for the Earth's revolution around the sun. Since the Earth makes one revolution around the sun per year, which is 360 degrees, the rate of change of the sun's right ascension is calculated. Hence, this precession is responsible for the satellite's crossing of same areas at the same local solar time and this to remain nearly constant throughout the year. \cite{Meseguer}, \cite{Kramer 2002} \\ %0.9856473°/solar day. > This is the required rate of precession of \Omega.
+	%An orbit like this is possible by the fact that the Earth is not a perfect sphere. In the SSO, the daily rotation of the orbital satellite plane (with respect to the equatorial plane) is identical to the mean motion of the fictitious sun around the Earth = which is identical to the mean motion of the Earth around the sun. 
+	%The inclination of the orbit (for circular orbits) and altitudes between 400 km and 1000 km, is in the range of 97° to 99°. Therefore, they are also quasi polar orbits, which allow the whole surface of the Earth to be covered, even passing several times a day over the same point. + Their altitudes usually range from 700 to 800 km, with orbital periods of 98 to 102 minutes. (NOT SURE)
+	\\
+	This is a great benefit especially for the earth observation satellites, since the area of interest can be monitored throughout the year with similar illumination conditions and the changes can be easier detected. An additional advantage is that there is no need of correction due to difference illumination conditions in case the purpose of a project is to create the mosaic from adjacent images. \\
+	\\
+	It is also worth mentioning that in the case of a sun-synchronous orbit with an optical sensor, the images that were captured in the sunlit side of the Earth are of great interest. Most of the times these outcomes can be acquired from the descending pass of the orbit, which corresponds to the north-south movement of the satellite. On the other hand, in the case of active sensors, which provide their own illumination or passive sensors that record emitted radiation, the outcome of both passes, ascending or descending, is useful. \cite{Campbell}
 	\end{itemize}
 \end{itemize}
-
-
-
-	Polar orbit - Near-polar orbit (inclination of 90deg or near 90deg -usually when its >60deg-, which would pass over the Earth's poles each orbit or over higher latitudes. Another benefit is that the orbital plane is fixed and the Earth rotates continuously beneath this plane. So, since the orbital period is a integral multiple of the sidereal day, then the satellite passes over the same point on the surface at regular intervals.) Their orbit which is basically north-south with conjunction with the Earth's rotation (west-east), allows them to cover most of the Earth's surface over a certain period of time.
--- The choice of altitude for a polar orbit is determined by several factors. A lower altitude orbit results in: a) a shorter orbital period, b) poorer coverage of the surface, c) stronger signal returns, d) better spatial resolution, e) greater drag and shorter lifetime.
-Many of these near-polar orbit orbits are also sun-synchronous, such as they cover each area fo the world at a constant local time of day called local sun time.
-	Sun-Synchronous orbit (a special case of near-polar orbit!):
-An orbit like this is possible by the fact that the Earth is not a perfect sphere. In the SSO, the daily rotation of the orbital satellite plane (with respect to the equatorial plane) is identical to the mean motion of the fictitious sun around the Earth = which is identical to the mean motion of the Earth around the sun. So, if a satellite is placed in an orbit at an altitude producing a period that was an integral multiple of the sidereal day, then the satellite passes over the same spot on the Earth at the same solar time each day, every day of the year. This is a great benefit especially for the remote sensing satellites, since the area of interest can be monitored throughout the year with similar illumination conditions and the changes can be easier detected.
-%(((So, a SSO it is an orbit for which the plane of the satellite orbit is always the same in relation to the Sun. A sun-synchronous orbit is not fixed in space. It must move 1° per day to compensate for the Earth's revolution around the Sun. Since the Earth makes one revolution (360°) around the Sun per year, we can calculate the rate of change of the Sun's right ascension: 0.9856473°/solar day. → this is the required rate of precession of Ω))) --Cite: put some generic like Kramer... --->  "This precession ensures that the equatorial crossing times of the satellites, in terms of the local solar time, remain nearly constant throughout the year. This means that a satellite can make repeated global observations from a single set of sensors with similar illumination from pass to pass." (Source: https://ral.ucar.edu/~djohnson/satellite/coverage.html#polar)
-The inclination of the orbit (for
-circular orbits) and altitudes between 400 km and 1000 km, is
-in the range of 97° to 99°. Therefore, they are also quasi polar orbits, which allow the whole surface of the Earth to be
-covered, even passing several times a day over the same point.
-Source: Keplerian_orbits
-%Meseguer, J., Pérez-Grande, I., & Sanz-Andrés, A. (2012). Keplerian orbits. Spacecraft Thermal Control, 39–57. doi:10.1533/9780857096081.39
-%(Publisher: Woodhead Publishing)
-%
-%https://www.sciencedirect.com/book/9781845699963/spacecraft-thermal-control#book-info
-"At any given latitude, the position of the sun in the sky as the satellite passes overhead will be the same within the same season. This ensures consistent illumination conditions (=lighting conditions will be nearly
-the same) when acquiring images in a specific season over successive years, or over a particular area over a series of days. This is an important factor for monitoring changes between images or for mosaicking adjacent images together, as they do not have to be corrected for different illumination conditions." (Source: https://www.nrcan.gc.ca/maps-tools-and-publications/satellite-imagery-and-air-photos/remote-sensing-tutorials/acknowledgements-permission-use/9391)
-
-Their altitudes usually range from 700 to 800 km, with orbital periods of 98 to 102 minutes.
-
-In the case of sun-synchronous orbits with an optical sensor, it is important to know which data are taken from the "ascending" pass of the orbit, which corresponds to the pass of the orbit when the satellite is moving from south to north, and which from the "descending" which corresponds to north to south movement. Then, by knowing the revisit time we can have a better view on the outcome results. (If the orbit is sun-synchronous) then the ascending pass is most likely on the shadowed side of the Earth while the descending pass is on the sunlit side. So, in the case of optical imagery we are interested on the descending passes. In the case of active sensors which provide their own illumination or passive sensors that record emitted (i.e. thermal) radiation the outcome of both passes is useful.
-
-
-
-  Constellations: With two or more satellites a desired coverage of the Earth can be achieved easier. "The satellites may be placed within the same orbital plane to decrease the orbital period, or the satellites may be placed into different orbital planes to compensate for the movement of the observation area due to the rotation of the Earth.
-% Source: Campbell BA, McCandless W (1996) Introduction to space sciences and spacecraft applications. Elsevier
 
 
 \bigskip
 \subsubsection{Critical regions of LEO}
 \bigskip
-%
-%IADC (Inter-Agency Space Debris Coordination Committee) has declared protected regions \cite{IADC 2007}.
 
-The total number of operating satellites, as of 31.3.2020 including all the launches by that date is 2,666 with 1,918 being in LEO. (It is the most crowded one) \cite{UCS} There are some regions of LEO, which have already been declared as critical. More specifically, the three critical regions in LEO are \cite{Kramer 2002}:
+The total number of operating satellites in outer Space is 2,787 with 2,032 being in LEO as of 31.07.2020. \cite{UCS} Undoubtedly, LEO is the most crowded region orbiting Earth. Even though the boundaries of the LEO region are located from 200 to 2000 km above the Earth's surface, there are some specific zones, which have been declared as protected regions by IADC (Inter-Agency Space Debris Coordination Committee). \cite{IADC 2007} In the recent years, many studies have been conducted into detecting the highly populated regions in LEO.
+
+According to Kramer [2002] there are three critical regions in LEO, which are the following:
 \begin{itemize}
-\item The first critical region is at the altitude 750-850km, at which the spatial density is increased because of the debris' population. It is characterized as critical, because objects need hundreds of years in order to decay and re-enter the atmosphere.
-\item The second critical region is at the altitude 900-1000km, at which there is a high number of massive objects. Drag is also not sufficient in order to help objects decay and thus the spatial density increases over time.
-\item The third critical region is at the altitude 1100-1300km. At this region the effect of drag is negligible, which means that any additional object builds up the orbital population.
-%The future large constellations will be placed around these altitudes, which makes this region even more alarming. \cite{Somma 2019}
+\item The first critical region is at the altitude 750-850 km, at which the spatial density is increased because of the debris' population. It is characterized as critical, because objects need hundreds of years in order to decay and re-enter the atmosphere.
+\item The second critical region is at the altitude 900-1000 km, at which there is a high number of massive objects. Drag is also not sufficient in order to help objects decay and thus the spatial density increases over time.
+\item The third critical region is at the altitude 1100-1300 km. At this region the effect of drag is negligible, which means that any additional object builds up the orbital population.
 \end{itemize}
 
+A more recent study was carried out by Somma et al. [2019], which simulated the population of the LEO from 2009 till 2209, based on the population statistics of the period 2009-2016. As it can be seen in the Figure \ref{Somma} there are three alarming regions, confirming the \cite{Kramer 2002} study as the two findings of the studies are similar.
+\begin{itemize}
+\item The major density peak region is found at the altitude 750-800 km.
+\item In addition, the second high density peak region is at the altitude of 900-1050 km. It can also be noticed that the two aforementioned zones tend to get closer over time almost merging with each other (Figure \ref{Somma}).
+\item Last but not least, there is a third region with high density numbers at 1400-1550 km.
+\end{itemize} 
 
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{Images/Somma.png}\caption{The evolution of the total spatial density in the LEO region. \textit{Source: \cite{Somma 2019}}}
+\label{Somma} 
+\end{figure}
 
-%(If I want to further analyze about the satellite viewing geometries and scanning patterns: Page 21,22 in http://www.atmosp.physics.utoronto.ca/people/strong/phy499/section2_05.pdf) --> It makes sense to do it if a use different ways to calculate the revisit time. So, if for every satellite I have the detailed info about the viewing geometry then I can do it. Another way is to write those info in the theory part and then calculate the revisit time, since I don't have much info ...
+Those peaks in the density prelude higher collision rates, which can generate more collision fragments. As it seems nowadays, the future large constellations will be placed around these altitudes, which makes these regions even more alarming. \cite{Somma 2019}
 
-As far as the Space-Time Sampling in the LEO satellites: a) sampling is highly dependent on the orbit, b) area viewed on one orbit overlaps area viewed on the previous and succeeding orbits, c) usually view every point on the Earth twice a day, d) view each point a small number of local times but at varying elevation and azimuth angles.
+Another simulation of the debris population in LEO generated by ESA's MASTER-2009 tool was carried out by Crisp et al. [2020]. It was executed over the period 2020-2055 based on a business-as-usual scenario regarding the debris mitigation. As it can be seen in Figure \ref{crisp1}, there two major peak density regions in LEO. The first one is approximately from 700-1000 km and the second one is from 1400-1500 km. A similar conclusion can be reached from the averaged spatial density in LEO (Figure \ref{crisp2}). The fact that in this study the recent mega-constellations that are soon-to-be launched, e.g. from SpaceX Starlink, OneWeb, were not included, makes the situation even more alarming. \cite{Crisp 2020}
 
-%ABOUT REVISIT TIME:
-%The irterval of time required for the satellite to complete its orbit cycle is not the same as the "revisit period". Due to the steerable sensors, the off-nadir angles, the large swath width , the revisit time can be less than the orbit cycle time. "The revisit period is an important consideration for a number of monitoring applications, especially when frequent imaging is required (for example, to monitor the spread of an oil spill, or the extent of flooding). In near-polar orbits, areas at high latitudes will be imaged more frequently than the equatorial zone due to the increasing overlap in adjacent swaths as the orbit paths come closer together near the poles." (Source: https://www.nrcan.gc.ca/maps-tools-and-publications/satellite-imagery-and-air-photos/remote-sensing-tutorials/acknowledgements-permission-use/9391)
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{Images/crisp1.png}\caption{Simulated LEO debris population (spatial density) over the period 2020-2055. Generated using ESA's MASTER-2009 tool. \textit{Source: \cite{Crisp 2020}}}
+\label{crisp1} 
+\end{figure}
 
-
-
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{Images/crisp2.png}\caption{Average spatial density for LEO altitudes over the period 2020-2055. \textit{Source: \cite{Crisp 2020}}}
+\label{crisp2} 
+\end{figure}
 
 \bigskip
 \subsection{Earth Observation}
+\label{EO}
 \bigskip
 
-%Why EO? It has multiple capabilities
-What do EO offers? "Optical imagery, high-revisit, all weather, and nighttime, Synthetic Aperture Radar, radio signal collection satellites that can geolocate signals emissions—essentially offering commercial electronic intelligence capabilities that can support transportation and logistics, emergency search and rescue, or spectrum mapping in addition to its existing applications for national security"
-\cite{Hallex}
+The type of satellites, on which this current master thesis focuses, is the Earth Observation satellites. Earth Observation (EO) is the process of acquiring observations, data, or measurements of the Earth remotely. One of the most common form of data that can be acquired from this field is the digital imagery and for this reason the main types of EO imagery will be described below. \cite{ESA EO}
 
-% TYPES OF EARTH OBSERVATION IMAGERY!!!!!!!!!
-%https://business.esa.int/newcomers-earth-observation-guide
+\bigskip
+\subsubsection{Passive imagery}
+\bigskip
+
+Passive imagery detects the electromagnetic emissions from particles of the Earth's surface and atmosphere. Usually depends on the day-night cycle, since these emissions are most of the times the result of reflected sunlight. According to the wavelength spectrum that the sensor can cover, the passive imagery is divided into the following categories:
+\begin{itemize}
+\item Panchromatic: \\
+The images of this type detect and measure the light intensity in the full visible spectrum. However, the final product is displayed as shades of grey. Another domain, which can be captured by this product, is the thermal infrared (IR). In this case, the intensity of the image is correlated with the temperature of the object emitting that radiation.
+\item Multi-spectral: \\
+A multi-spectral image has usually measurements in 3 bands of the visible spectrum, centered around the blue, green and red wavelengths, which is also called "natural colour". Since in this category several narrow bands of the electromagnetic spectrum are involved for the production of the image, the resolution of the image is lower than of a panchromatic image. Nevertheless, multi-spectral images are not restricted to the visible spectrum or the combinations of the wavelength bands.
+\item Pan-sharpened: \\
+Pan-sharpening is a numerical process, which produces a high resolution coloured images. Since a panchromatic image have a high spatial resolution and the respective multi-spectral image a high spectral resolution, their combination can lead to an improved version of both.
+\item Hyper-spectral: \\
+A hyper-spectral image measures the light intensity for a large number of contiguous narrow spectral bands for each pixel.
+\item Microwave Radiometry: \\
+In this field, the measurement of the atmospheric water vapour column and cloud liquid water content are the main objectives. This aims at the improvement of the radar altimeter signals.
+\end{itemize}
+
+\bigskip
+\subsubsection{Active imagery}
+\bigskip
+
+On the contrary to passive imagery, active imagery systems transmit a specific electromagnetic signal, whose return can be useful into understanding more about the Earth's surface. There are several methods and types of signals in the active imagery, such as:
+\begin{itemize}
+\item Synthetic Aperture Radar (SAR): \\
+SAR is the most common active sensor in the field of EO. Electromagnetic pulses are transmitted towards the Earth's surface, which are either reflected or scattered by the surface. The intensity of the return pulse, which is detected by the instrument's antenna, is used for the generation of the SAR imagery. The fact that the radar imaging does not depend on the illumination of the scene, or on the meteorological conditions, makes the radar imaging a sensor, which can be used in multiple situations.
+\item Light Detection and Ranging (Lidar): \\
+Similarly to SAR, Lidar is an active sensor using IR, visible, or UV wavelengths. The applications that it can be found useful are for the precise measurement of topographic features, profiling clouds, measuring winds, aerosols or other atmospheric components.
+\item Radar Altimetry: \\
+A sensor of radar altimeter uses very short electromagnetic pulses in order to measure the surface topography profile along the satellite track. It can be used for acquiring the ocean and land topography, the ice sheets or even mapping the sea floor.
+\item Radar Scatterometry: \\
+Radar scatterometer is a sensor with which the direction and the speed of the wind can be measured. This result can be produced based on the reflection or scattering effect produced while scanning the surface of the Earth. Finally, the measurements of the backscatter from the waves at the sea surface are necessary for calculating information regarding weather forecast, oceanography, as well as climate changes.
+\end{itemize}
+
+
+\bigskip
+The main and most related categories of the Earth Observation to the current work, were previously described. There are many other parameters, which are related to the EO imagery, such as the spatial resolution, off-nadir angle, revisit time and others. In the Chapter \ref{chap:3}, all the involved parameters are extensively analyzed and discussed. 
+
 
 %----------------------------------------------------------------
 %Regarding the field of remote sensing: "The critical design goal then is to place the satellite in an orbit that is low enough to permit a relatively short orbital period while at the same time the orbit is high enough to permit observation of a wide enough swath so that during a single orbit the Earth will rotate by less than the scan swath of the satellite's instrumentation. By placing a satellite at an altitude of about 850 km, you get an orbital period of roughly 100 minutes. At this altitude, you can get true global coverage if the scan swath of the satellite's instrumentation is about 3000 km." ABOUT THE SSO: "The orbit, however, can be improved if the orbital plane is inclined slightly away from a true N-S orbit. In this case, the asymmetric gravitational pull of the Earth introduces a slow precession in the orbital plane. With a inclination of about 98.7 degrees, the orbit will precess at almost exactly the same rate that the Earth rotates around the sun. That means that the satellite's orbital plane will appear to be fixed with respect to the sun, or sun-synchronous. Due to the inclination away from N-S, these satellites do not go directly over the poles, but do get close enough to provide true global coverages from a single satellite. Since the orbit is aligned with respect to the sun, in fact, you get twice daily coverage of every portion of the globe." Source: https://ral.ucar.edu/~djohnson/satellite/coverage.html#polar
