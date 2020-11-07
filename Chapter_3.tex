@@ -27,7 +27,8 @@ From the elements of a TLE set, eight parameters are being extracted and used in
 More specifically, the epoch date is the number of days passed in the particular year. The information about the year is taken from the first two digits of the parameter and from the following digits the exact month, day, epoch hour, minute and second can be found. Finally, the epoch time is calculated in seconds as:
 
 \begin{equation}
-epoch = (hour * 3600) + (min * 60) + sec.
+\label{epoch}
+\text{epoch} = (\text{epoch hour} * 3600) + (\text{epoch min} * 60) + \text{epoch sec}.
 \end{equation}
 
 \begin{figure}
@@ -36,11 +37,12 @@ epoch = (hour * 3600) + (min * 60) + sec.
 \label{tle} 
 \end{figure}
 
-The parameters of eccentricity, inclination, RAAN, argument of perigee and mean anomaly can be seen graphically in the Figure \ref{keplerian_elements}. In short, eccentricity is a constant defining the shape of the orbit. There is a circular orbit when it is zero and an elliptical orbit when the number is less than one. To the given value of eccentricity from the TLE, a decimal at the beginning must be applied. As far as the inclination, which is given in degrees, it is the angle between the equator and the orbit plane. The RAAN (degrees) is the angle between vernal equinox and the point where the orbit crosses the equatorial plane and goes towards the north. Argument of perigee, or else the node is the angle between the ascending node and the orbit's point of the closest approach to the earth, which is called perigee. It is given in degrees. Finally, the mean anomaly is the angle of satellite location in the nominal orbit, which referenced to a circular orbit with radius equal to the semi-major axis. It is measured from the perigee and it is also given in degrees. It should be also noted that the conversion of their units from degrees to radians is necessary, since many other computations will be followed. \cite{Vallado}
+The parameters of eccentricity, inclination, RAAN, argument of perigee and mean anomaly can be seen graphically in the Figure \ref{keplerian_elements}. In short, eccentricity is a constant defining the shape of the orbit. There is a circular orbit when it is zero and an elliptical orbit when the number is less than one. To the given value of eccentricity from the TLE, a decimal at the beginning must be applied. As far as the inclination, which is given in degrees, it is the angle between the equator and the orbit plane. The RAAN or else the node (degrees) is the angle between vernal equinox and the point where the orbit crosses the equatorial plane and goes towards the north. Argument of perigee is the angle between the ascending node and the orbit's point of the closest approach to the earth, which is called perigee. It is given in degrees. Finally, the mean anomaly is the angle of satellite location in the nominal orbit, which referenced to a circular orbit with radius equal to the semi-major axis. It is measured from the perigee and it is also given in degrees. It should be also noted that the conversion of their units from degrees to radians is necessary, since many other computations will be followed. \cite{Vallado}
 
 From the parameter of mean motion ($n$), the semi-major axis ($a$), as well as the period ($T$) of the orbit can be found. Namely, the mean motion is converted from the unit of $revolutions/day$ to $radian/sec$. Then, the semi-major axis is calculated from the Kepler's 3\textsuperscript{nd} law:
 \begin{equation}
-n^2 * a^3 = \mu,
+\label{3rd_keplers_law}
+n^2 a^3 = \mu,
 \end{equation}
 %a = (\frac{\mu}{n^2})^{1/3},
 with $\mu$ being the geometric gravitational parameter.
@@ -51,22 +53,150 @@ with $\mu$ being the geometric gravitational parameter.
 \label{keplerian_elements} 
 \end{figure}
 
-Apart from the parameters that were just mentioned, it is necessary to be added some parameters related to the Earth Observation sensor that the satellite has. The orbit lifetime, the type of sensor (see Section \ref{EO}) and the resolution are some of them. However, the determiner parameter in the calculation of the revisit time is the information of the swath width of the sensor, which is further explained in the following section. The number is inserted in the units of kilometers.
+Apart from the parameters that were just mentioned, it is necessary to be added some parameters related to the Earth Observation sensor that the satellite has. The orbit lifetime, the type of sensor (see Section \ref{EO}) and the spatial resolution are some of them. However, the determiner parameter in the calculation of the revisit time is the information of the swath width of the sensor, which is inserted in the units of kilometers. Swath is called the area of the Earth that is captured on the image and thus the bigger the number of swath is, the larger the area that is captured. In the Figure \ref{swath_width}, both the swath width and the spatial resolution are illustrated.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{Images/swath_width.png}\caption{Illustration showing the difference between swath width and spatial resolution. \textit{Source: Remote Sensing Technology Center of Japan - EO in Japan. Website: restec.or.jp (Accessed: October, 2020)}} %https://www.restec.or.jp/en/knowledge/sensing/sensing-3.html
+\label{swath_width} 
+\end{figure}
 
 \bigskip
 \subsection{Orbit computation}
 \bigskip
 
+The next step is the computation of the orbit. The imported parameters are given in a geocentric reference system and they define a unique orbit.
 
-%Conversion to the correct units
-%Semester 1 - Ex1 + Tutorial
+\bigskip
+\subsubsection{Polar coordinates in orbital plane}
+\bigskip
 
-%Book: Montenbruck
+Firstly, the polar coordinates, which are the radius ($r$) and the true anomaly ($v$) are calculated. For this calculation though, the eccentric anomaly ($E$) needs to be found through this transcendental Kepler's equation:
+\begin{equation}
+E - e \sin{E} = M,
+\end{equation}
 
+where $M$ is the mean anomaly. Once the equation has be solved iteratively, the radius ($r$) and true anomaly ($v$) can be found.
+\begin{equation}
+r = a(1 - e \cos{E}),
+\end{equation}
+
+\begin{equation}
+\tan{\frac{\nu}{2}} = \sqrt{\frac{1 + e}{1 - e}} \tan{\frac{E}{2}}.
+\end{equation}
+
+\bigskip
+\subsubsection{Position \& velocity in space-fixed system}
+\bigskip
+
+The main idea of this task is the rotation of the orbital plane into the equatorial coordinate system. The angles that were used to the rotation matrices were the RAAN ($\Omega$), the inclination ($i$), and the argument of perigee ($\omega$). In the Figure \ref{orbit_to_space}, the rotation of the orbital plane is illustrated based on the aforementioned angles. For achieving that, the position (Equation \ref{position_orbital}) and velocity (Equation \ref{velocity_orbital}) in the orbital plane should be calculated first \cite{Montenbruck}:
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{Images/orbit_to_space.png}\caption{The rotation of the orbital plane into the equatorial plane with the help of the following orbital elements of the satellite: inclination ($i$), RAAN ($\Omega$) and argument of perigee ($\omega$). \textit{Source: \cite{Montenbruck}}}
+\label{orbit_to_space} 
+\end{figure}
+
+\begin{equation}
+\label{position_orbital}
+\vv{r_{b}} = r \begin{bmatrix} \cos{v} \\ \sin{v} \\ 0 \end{bmatrix}
+\end{equation}
+\begin{equation}
+\label{velocity_orbital}
+\dot{\vv{r_{b}}} = \sqrt{\frac{\mu}{a (1 - e^2)}} \begin{bmatrix} -\sin{v} \\ e + \cos{v} \\ 0 \end{bmatrix},
+\end{equation}
+
+where $\mu$ the geometric gravitational parameter (Equation \ref{3rd_keplers_law}).
+
+Then, the position and the velocity in the space-fixed system are found through \cite{Montenbruck}:
+\begin{equation}
+\label{space-fixed}
+\vv{r} = R_3 (-\Omega) R_1  (-i) R_3 (-\omega) \vv{r_{b}},
+\end{equation}
+\begin{equation}
+\dot{\vv{r}} = R_3 (-\Omega) R_1  (-i) R_3 (-\omega) \dot{\vv{r_{b}}},
+\end{equation}
+where $\vv{r_{b}}$, $\dot{\vv{r_{b}}}$ are taken from the equations \ref{position_orbital}, \ref{velocity_orbital} respectively. The elementary matrices that were used are:
+\begin{equation}
+R_1(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos{\theta} & \sin{\theta} \\ 0 & -\sin{\theta} & \cos{\theta} \end{bmatrix},
+\end{equation}
+for the rotation around the x-axis ($R_{1}$), and
+\begin{equation}
+\label{R3}
+R_3(\theta) = \begin{bmatrix} \cos{\theta} & \sin{\theta} & 0 \\ -\sin{\theta} & \cos{\theta} & 0 \\ 0 & 0 & 1 \end{bmatrix},
+\end{equation}
+for the rotation around z-axis ($R_{3}$) \cite{Montenbruck}.
+
+\bigskip
+\subsubsection{Position \& velocity in earth-fixed system}
+\bigskip
+
+After the orbit calculation in the space-fixed system, the position and velocity in the earth-fixed system can be found. Based on the rotation rate of the Earth ($\Omega_{E}$) and the sidereal angle, the angle of rotation ($\theta_{0}$) (Equation \ref{theta_angle}) between the space and earth system is calculated. The sidereal angle is calculated through the Greenwich mean sidereal time \cite{Vallado}, having as an input the Julian date from the information about the epoch time (Equation \ref{epoch}).
+
+\begin{equation}
+\label{rotation_rate}
+\Omega_{E} = \frac{2 \pi}{86164}
+\end{equation}
+
+\begin{equation}
+\label{theta_angle}
+\theta_{0}(t) = \Omega_{E} \cdot t + \text{sidereal angle}
+\end{equation}
+
+Both angles, the angle of rotation $\theta_{0}$ and the sidereal angle, should be in radian in order to be used in the following steps. Finally, the position in the earth-fixed system is calculated using the rotation matrix around the z-axis (Equation \ref{R3}) as:
+\begin{equation}
+\vv{r}_{Earth-fixed}(t) = R_{3}(\theta_{0}(t)) \vv{r},
+\end{equation}
+where $\vv{r}$ is the position in the space-fixed system (Equation \ref{space-fixed}).
+
+\bigskip
+\subsubsection{Longitude \& latitude on the Earth's surface}
+\bigskip
+
+In order to calculate the position of the sub-satellite's points on the Earth's surface, the longitude and latitude is needed. The equations that link the Earth-fixed coordinates with the $\lambda$ and $\phi$ are the following:
+
+\begin{equation}
+\tan{\lambda} = \frac{y_{\text{Earth-fixed}}}{x_{\text{Earth-fixed}}},
+\end{equation}
+
+\begin{equation}
+\tan{\phi} = \frac{z_{\text{Earth-fixed}}}{\sqrt{x^2_{\text{Earth-fixed}} + y^2_{\text{Earth-fixed}}}}.
+\end{equation}
+
+The groundtrack of the orbit, which is the path of the sub-satellite point as the satellite travels through its orbit, can be consequently acquired. However, the actual groundtrack of a satellite differs from a simple circle that results from the intersection of the orbital plane with the surface of the Earth. For a satellite with a period $T$, the longitude $\lambda$ is shifted from one revolution to the next \cite{Montenbruck} :
+\begin{equation}
+\Delta \lambda_{\Omega} = - \dot{\theta} \cdot T = - 0.2507^{\circ}/ min \cdot T,
+\end{equation}
+
+where $\dot{\theta}$ is the Greenwich mean sidereal at time $t$. This is due to the Earth's rotation, as it can be seen in the Figure \ref{groundtrack-fixed-rotating}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{Images/groundtrack-fixed-rotating.png}\caption{Illustration of the groundtracks in cases where the Earth is fixed and rotating. \textit{Source: \cite{Vallado}}}
+\label{groundtrack-fixed-rotating} 
+\end{figure}
+
+\bigskip
+\subsubsection{Perturbation on the orbital elements}
+\bigskip
+
+Since the focus of this application is on the low earth orbit (LEO) satellites, the gravity field is the largest perturbation, which cause secular motion to some of the orbital elements. The RAAN is one the affected by the zonal harmonics, and the equation that describes it:
+\begin{equation}
+\dot{\Omega} = - \frac{3 n R_{\bigoplus}^{2} J_{2} \cos{i}}{2 a^{2}},
+\end{equation}
+where $R_{\bigoplus}$ is the radius of the Earth according to WGS-84 (6378.137 km), and as $n$ the mean motion is used \cite{Montenbruck}.
+
+Due to secular perturbations, the argument of perigee is also affected:
+\begin{equation}
+\dot{\omega} = - \frac{3 n R_{\bigoplus}^{2} J_{2}}{4 a^{2}} (1 - 5 \cos^{2}{i}).
+\end{equation}
+
+% Vallado p. 674 + Montenbruck p.50
 
 \bigskip
 \subsubsection{Revisit time definition}
 \bigskip
+
 
 % Define revisit time --> average (median) revisit time in equator
 %ABOUT REVISIT TIME:
@@ -74,7 +204,7 @@ Apart from the parameters that were just mentioned, it is necessary to be added 
 
 \subsection{Computational calculation of revisit time}
 
-In order to approach the issue of calculating the revisit time in equator The swath width of the sensor (?) defines somehow the "area". 
+In order to approach the issue of calculating the revisit time in equator The swath width of the sensor defines somehow the "area". 
 
 \subsubsection{Map projection}
 
