@@ -4,12 +4,12 @@
 %\autoref{chap:3}
 \bigskip
 
-The mitigation of the overpopulation problem is nowadays an absolute necessity. The application, which is described below, has been developed towards this direction. More specifically, it can give the incentives to create space traffic management rules based on the orbit and capacity allocation, as well as the added value that each new satellite has.
+The mitigation of the growing numbers of objects in space is nowadays an absolute necessity. The application, which is described below, has been developed towards this direction. More specifically, it can give the incentives to create space traffic management rules based on the orbit and capacity allocation, as well as the added value that each new satellite has.
 
 The application has two major capabilities. The first one is the calculation of the revisit time of a single satellite or constellation (Section \ref{revisit time}). The second one is a tool, with which the user can find out what is the added value of an object based on the number of the satellites that are already in-orbit and have the same characteristics (Section \ref{added value}). This tool, in essence, has many more capabilities, which are presented in Chapter 4.%\ref{chap:4}.
 
 \bigskip
-\section{From satellite definition to revisit time calculation}
+\section{From satellite orbit definition to revisit time calculation}
 \label{revisit time}
 \bigskip
 
@@ -29,8 +29,11 @@ More specifically, the epoch date is the number of days passed in the particular
 
 \begin{equation}
 \label{epoch}
-\text{epoch} = (\text{epoch hour} * 3600) + (\text{epoch min} * 60) + \text{epoch sec}.
+\text{epoch day} = (\text{epoch hour} * 3600) + (\text{epoch min} * 60) + \text{epoch sec}.
 \end{equation}
+
+% If I want to elaborate about epoch, Julian date > check about Julian calculation: https://geotimedate.org/julian-time-converter/
+% The epoch is given in Greenwich Mean Time (GMT). The epoch defines the time to which all of the time- varying fields in the set are referenced. (All times are measured in mean solar time). 
 
 \begin{figure}
 \centering
@@ -38,7 +41,7 @@ More specifically, the epoch date is the number of days passed in the particular
 \label{tle} 
 \end{figure}
 
-The parameters of eccentricity, inclination, RAAN, argument of perigee and mean anomaly can be seen graphically in the Figure \ref{keplerian_elements}. In short, eccentricity is a constant defining the shape of the orbit. There is a circular orbit when it is zero and an elliptical orbit when the number is less than one. To the given value of eccentricity from the TLE, a decimal at the beginning must be applied. As far as the inclination, which is given in degrees, it is the angle between the equator and the orbit plane. The RAAN or else the node (degrees) is the angle between vernal equinox and the point where the orbit crosses the equatorial plane and goes towards the north. Argument of perigee is the angle between the ascending node and the orbit's point of the closest approach to the earth, which is called perigee. It is given in degrees. Finally, the mean anomaly is the angle of satellite location in the nominal orbit, which referenced to a circular orbit with radius equal to the semi-major axis. It is measured from the perigee and it is also given in degrees. It should be also noted that the conversion of their units from degrees to radians is necessary, since many other computations will be followed. \cite{Vallado}
+The parameters of eccentricity, inclination, RAAN, argument of perigee and mean anomaly can be seen graphically in the Figure \ref{keplerian_elements}. In short, eccentricity is a constant defining the shape of the orbit. There is a circular orbit when it is zero and an elliptical orbit when the number is less than one. To the given value of eccentricity from the TLE, a decimal at the beginning must be applied. As far as the inclination, which is given in degrees, it is the angle between the equator and the orbit plane. The RAAN or else the node (degrees) is the angle between vernal equinox and the point where the orbit crosses the equatorial plane and goes towards the north. Argument of perigee is the angle between the ascending node and the orbit's point of the closest approach to the earth, which is called perigee. It is given in degrees. Finally, the mean anomaly is the angle of satellite location in the nominal orbit, which is referenced to a circular orbit with radius equal to the semi-major axis. It is measured from the perigee and it is also given in degrees. It should be also noted that the conversion of their units from degrees to radians is necessary, since many other computations will be followed \cite{Vallado}.
 
 From the parameter of mean motion ($n$), the semi-major axis ($a$), as well as the period ($T$) of the orbit can be found. Namely, the mean motion is converted from the unit of $revolutions/day$ to $radian/sec$. Then, the semi-major axis is calculated from the Kepler's 3\textsuperscript{nd} law:
 \begin{equation}
@@ -46,7 +49,7 @@ From the parameter of mean motion ($n$), the semi-major axis ($a$), as well as t
 n^2 a^3 = \mu,
 \end{equation}
 %a = (\frac{\mu}{n^2})^{1/3},
-with $\mu$ being the geometric gravitational parameter.
+with $\mu$ being the geocentric gravitational parameter.
 
 \begin{figure}
 \centering
@@ -55,6 +58,7 @@ with $\mu$ being the geometric gravitational parameter.
 \end{figure}
 
 Apart from the parameters that were just mentioned, it is necessary to be added some parameters related to the Earth Observation sensor that the satellite has. The orbit lifetime, the type of sensor (see Section \ref{EO}) and the spatial resolution are some of them. However, the determiner parameter in the calculation of the revisit time is the information of the swath width of the sensor, which is inserted in the units of kilometers. Swath is called the area of the Earth that is captured on the image and thus the bigger the number of swath is, the larger the area that is captured. In the Figure \ref{swath_width}, both the swath width and the spatial resolution are illustrated. Those parameters are usually inversely proportional; the higher spatial resolution, the less area is covered by a single image and thus the smaller the swath width.
+% The swath width of the optical system is proportional to the orbit height. (Low altitude orbits have lack of coverage capability).
 
 \begin{figure}
 \centering
@@ -77,7 +81,7 @@ Firstly, the polar coordinates, which are the radius ($r$) and the true anomaly 
 E - e \sin{E} = M,
 \end{equation}
 
-where $M$ is the mean anomaly. Once the equation has be solved iteratively, the radius ($r$) and true anomaly ($v$) can be found.
+where $M$ is the mean anomaly. Once the equation is solved iteratively, the radius ($r$) and true anomaly ($v$) can be found.
 \begin{equation}
 r = a(1 - e \cos{E}),
 \end{equation}
@@ -85,6 +89,8 @@ r = a(1 - e \cos{E}),
 \begin{equation}
 \tan{\frac{\nu}{2}} = \sqrt{\frac{1 + e}{1 - e}} \tan{\frac{E}{2}}.
 \end{equation}
+
+% If I want to elaborate more on how I found the true anomaly, check doc file (search for perigee passing time) or the same is written in the python code (before the actual commands - in the comments at the beginning). 
 
 \bigskip
 \subsubsection{Position \& velocity in space-fixed system}
@@ -139,9 +145,12 @@ After the orbit calculation in the space-fixed system, the position and velocity
 \Omega_{E} = \frac{2 \pi}{86164}
 \end{equation}
 
+%% What is the 86164 ? It is the length of the SIDEREAL DAY, which is defined as the time it takes earth to complete one revolution around its own axis as measured by observing a distant star. It is 86164sec long.
+%% On the other hand, the SOLAR DAY is a bit more 86400sec long, because it is the time that the satellite needs to roatate from its axis but also to line up with the sun-earth line, since it also orbits the sun.
+
 \begin{equation}
 \label{theta_angle}
-\theta_{0}(t) = \Omega_{E} \cdot t + \text{sidereal angle}
+\theta_{0}(t) = \Omega_{E} \cdot t + \text{sidereal angle}_{\text{GMST 0h}}
 \end{equation}
 
 Both angles, the angle of rotation $\theta_{0}$ and the sidereal angle, should be in radian in order to be used in the following steps. Finally, the position in the earth-fixed system is calculated using the rotation matrix around the z-axis (Equation \ref{R3}) as:
@@ -166,16 +175,20 @@ In order to calculate the position of the sub-satellite's points on the Earth's 
 
 The groundtrack of the orbit, which is the path of the sub-satellite point as the satellite travels through its orbit, can be consequently acquired. However, the actual groundtrack of a satellite differs from a simple circle that results from the intersection of the orbital plane with the surface of the Earth. For a satellite with a period $T$, the longitude $\lambda$ is shifted from one revolution to the next \cite{Montenbruck} :
 \begin{equation}
-\Delta \lambda_{\Omega} = - \dot{\theta} \cdot T = - 0.2507^{\circ}/ min \cdot T,
+\Delta \lambda_{\Omega} = - \Omega_{E} \cdot T = - 0.2507^{\circ}/ min \cdot T.
 \end{equation}
 
-where $\dot{\theta}$ is the Greenwich mean sidereal at time $t$. This is due to the Earth's rotation, as it can be seen in the Figure \ref{groundtrack-fixed-rotating}.
+This is due to the Earth's rotation, as it can be seen in the Figure \ref{groundtrack-fixed-rotating}.
+
+% Check from Vallado p.898 the "groundtrack shift".
 
 \begin{figure}
 \centering
 \includegraphics[width=0.9\textwidth]{Images/groundtrack-fixed-rotating.png}\caption{Illustration of the groundtracks in cases where the Earth is fixed and rotating. \textit{Source: \cite{Vallado}}}
 \label{groundtrack-fixed-rotating} 
 \end{figure}
+
+% Reference: Vallado p. 147
 
 \bigskip
 \subsubsection{Perturbation on the orbital elements}
@@ -193,12 +206,13 @@ Due to secular perturbations, the argument of perigee is also affected:
 \end{equation}
 
 % Vallado p. 674 + Montenbruck p.50
+% If you want to elaborate, check the doc notes about "Perturbing forces on orbital elements."
 
 \bigskip
 \subsubsection{Revisit time definition}
 \bigskip
 
-The goal of the first part of the application is to find the revisit time of the satellite. Thus, its definition needs to be noted. The revisit time is the time elapsed between two successive observations of the same ground point on the surface of the Earth. \cite{Luo} To be more specific, since this application will produce one number as the revisit time of a satellite, this number refers to the average revisit time of all the ground points in the equator. However, the user has the capability of inserting in the application a latitude, in which he/she is interested in knowing the revisit time, other than the one in the equator which comes by default. More elaborated description regarding its calculation is being followed.
+The goal of the first part of the application is to find the revisit time of the satellite. Thus, its definition needs to be noted. The revisit time is the time elapsed between two successive observations of the same ground point on the surface of the Earth \cite{Luo}. To be more specific, since this application will produce one number as the revisit time of a satellite, this number refers to the average revisit time of all the ground points in the equator. However, the user has the capability of inserting in the application a latitude, in which he/she is interested in knowing the revisit time, other than the one in the equator which comes by default. More elaborated description regarding its calculation is being followed.
 
 %ABOUT REVISIT TIME:
 %The interval of time required for the satellite to complete its orbit cycle is not the same as the "revisit period". Due to the steerable sensors, the off-nadir angles, the large swath width , the revisit time can be less than the orbit cycle time. "The revisit period is an important consideration for a number of monitoring applications, especially when frequent imaging is required (for example, to monitor the spread of an oil spill, or the extent of flooding). In near-polar orbits, areas at high latitudes will be imaged more frequently than the equatorial zone due to the increasing overlap in adjacent swaths as the orbit paths come closer together near the poles." (Source: https://www.nrcan.gc.ca/maps-tools-and-publications/satellite-imagery-and-air-photos/remote-sensing-tutorials/acknowledgements-permission-use/9391)
@@ -213,7 +227,7 @@ One key element needed in order to calculate the revisit time is the observation
 \subsubsection{Map projection}
 \bigskip
 
-The map projection that was chosen is a equidistant cylindrical, which forms a grid of equal rectangles. In this projection the poles are represented as straight lines across the top and bottom of the grid, the same length as the equator line. It is worth mentioning that the distortion in the shape, scale and area increases as the distance from the equator increases. \cite{Lapaine} An example of this map projection is shown in Figure \ref{map_projection}, as it was generated by the Python code. The selection of this projection was made, since the distortions in the polar regions can be easily corrected, in comparison i.e. with a Mercator projection. The grid of equal rectangles resembles also an array in python, which makes the calculations more comprehensible.
+The map projection that was chosen is a equidistant cylindrical, which forms a grid of vertical and horizontal lines of constant spacing. In this projection the poles are represented as straight lines across the top and bottom of the grid, the same length as the equator line. It is worth mentioning that the distortion in the shape, scale and area increases as the distance from the equator increases \cite{Lapaine}. An example of this map projection is shown in Figure \ref{map_projection}, as it was generated by the Python code. The selection of this projection was made, since the distortions in the polar regions can be easily corrected, in comparison i.e. with a Mercator projection. The grid of equal rectangles resembles also an array in python, which makes the calculations more comprehensible.
 
 \begin{figure}
 \centering
@@ -225,10 +239,10 @@ The map projection that was chosen is a equidistant cylindrical, which forms a g
 \subsubsection{Grid creation}
 \bigskip
 
-The grid that is created on the global map is consisted of cells, whose size is the same as the swath width that is captured by the sensor of the satellite. Since the global map handles geographic degrees, 360 degrees in the longitude and 180 degrees in the latitude, the swath width needs to be converted as it was given originally in the unit of kilometers. A rule of thumb in the conversion is that 111 kilometers are approximately 1 degree. Thus, the interval between the cells, which is also named as grid interval in this application, can be found from the equation:
+The grid that is created on the global map is consisted of cells, whose size is the same as the swath width when they are captured by the sensor of the satellite in the equator. Since the global map handles geographic degrees, 360 degrees in the longitude and 180 degrees in the latitude, the swath width needs to be converted as it was given originally in the unit of kilometers. A rule of thumb in the conversion is that 111 kilometers are approximately 1 degree. Thus, the interval between the cells, which is also named as grid interval in this application, can be found from the equation:
 \begin{equation}
 \label{grid_interval}
-\text{grid interval} = \text{swath width} \cdot 0.008
+\text{grid interval} = \text{swath width} \cdot 0.008 \text{ [degrees]}
 \end{equation}
 
 Considering that the grid interval is known (Equation \ref{grid_interval}), the number of the cells that can fit in the global map is found. An important feature in the creation of the grid is that the zero degree latitude and longitude is always included in a cell (Figure \ref{map_projection_0covered}). In the case of a satellite with zero inclination, whose viewing latitudes are mostly the equatorial ones, cells containing the zero degree latitude are the ones apparently revealing the information about the revisit time in those regions. So in those cases, cells including the zero latitude are of utmost importance. However, this application focuses on Earth Observation (EO) satellites in the LEO region, whose orbits are usually near-polar. Hence, this feature can be truly beneficial when equatorial or tropical orbits are imported to the application.
@@ -273,6 +287,8 @@ the information of the period $T$ is found, with which the interval between the 
 
 since the grid interval is known (equation \ref{grid_interval}).
 
+% Change how to find the interval: for LEO the Δλ is about 340 degrees and for a retrograde orbit the Δλ is about 380 degrees! I used 360 degrees (for everything) \cite{Vallado}. Source Vallado p.149
+
 \bigskip
 \subsubsection{Tracking of satellite's path}
 \bigskip
@@ -293,7 +309,7 @@ As it can be seen in Figure \ref{map_projection_0covered}, since the zero degree
 \subsubsection{Tracking modification depending on sensor type}
 \bigskip
 
-One determinant parameter of the revisit time calculation is the swath width of the sensor as it was analyzed above. Nevertheless, the sensor type can change the final calculation. This is for example whether the instrument belongs to the passive or active imagery sensors (see section \ref{EO}). The reason behind is that when a satellite has passive instrument on board, it needs to be on the sunlit side of the Earth since those sensors record the reflected solar energy. Most of the EO satellites today are in near-polar sun-synchronous orbits, which have the following characteristic. \cite{Kramer 2002} The descending pass of the satellite, which is when the satellite travels southwards, is usually on the sunlit side in the case of a sun-synchronous orbit.
+One determinant parameter of the revisit time calculation is the swath width of the sensor as it was analyzed above. Nevertheless, the sensor type can change the final calculation. This is for example whether the instrument belongs to the passive or active imagery sensors (see section \ref{EO}). The reason behind is that when a satellite has passive instrument on board, it needs to be on the sunlit side of the Earth since those sensors record the reflected solar energy. Most of the EO satellites today are in near-polar sun-synchronous orbits, which have the following characteristic. The descending pass of the satellite, which is when the satellite travels southwards, is usually on the sunlit side in the case of a sun-synchronous orbit \cite{Kramer 2002}.
 
 This application, therefore, checks whether the satellite has a passive sensor or not, and in case it has, the revisit time is calculated only for the descending passes of the satellite. In the Figure \ref{ascending-descending}, one orbit of the Sentinel-2A is shown; since it is a sun-synchronous orbit, the descending pass is on the sunlit side of the Earth and the ascending on the shadowed.
 
@@ -303,7 +319,7 @@ This application, therefore, checks whether the satellite has a passive sensor o
 \label{ascending-descending}
 \end{figure}
 
-Yet another parameter that can change the calculation of the revisit time is whether the instrument has a nadir or titled looking sensor (see Figures \ref{nadir_looking} and \ref{tilted_looking}). In case a sensor has a titled looking capability, the result of the revisit time will not change, since all the counting of the cells will be shifted according to the respective tilt angle. However, if the information about the viewing geometry of the sensor is available, then the calculation of the revisit time can be actualized having taken into account this parameter as well.
+Yet another parameter that can change the calculation of the revisit time is whether the instrument has a nadir or titled looking sensor (see Figures \ref{nadir_looking} and \ref{tilted_looking}). In case a sensor has a titled looking capability, the result of the revisit time will not change, since all the counting of the cells will be shifted perpendicular to the groundtrack direction. However, if the information about the viewing geometry of the sensor is available, then the calculation of the revisit time can be actualized having taken into account this parameter as well.
 
 \begin{figure}
 \centering
@@ -375,7 +391,7 @@ The second layer refers to the main objective of the mission. This can be relate
 \label{classification_2nd_layer}
 \end{figure}
 
-This classification was implemented by taking into account various mission objectives and characteristics that were found in \cite{Newspace} and other databases, as it is mentioned in the previous section. Another source of influence was the work of Kramer [2002] \cite{Kramer 2002}. All in all, the creation of an objective, accurate, general and at the same time specific classification is a project that can have many solutions.
+This classification was implemented by taking into account various mission objectives and characteristics that were found in \cite{Newspace} and other databases, as it is mentioned in the previous section. Another source of influence was the work of Kramer \cite{Kramer 2002}. All in all, the creation of an objective, accurate, general and at the same time specific classification is a project that can have many solutions.
 
 \bigskip
 \subsection{Data import to the database}
@@ -384,6 +400,8 @@ This classification was implemented by taking into account various mission objec
 The application as it was described at the beginning of this chapter together with the advantages and capabilities that a database brings, create a useful tool. This can be further improved by inserting more data to the database.
 
 There are three possible ways of importing data in the database. The first one is through the server of the PostgreSQL locally, or in other words via the SQL application. The second one is through a configuration file (.ini file). In this way, the application first examines whether the imported satellite already exists in the database, or there is just a missing information regarding its revisit time, and then according to the answer it inserts it or not. The three way of importing data is from through a python script (see section \ref{app}), which is an automated process of inserting the TLE elements in the database.
+
+% In the first way, I also need to import manually not only the attributes, but also all the parameters related to the "classification" and the "sources" table.
 
 \bigskip
 The tables of the created database can be found in the appendices part (section \ref{app}).
