@@ -25,6 +25,8 @@ In this first step, the user can define a satellite by providing the TLE set to 
 
 From the elements of a TLE set, eight parameters are being extracted and used in the application. Those are the epoch date, inclination ($i$), Right Ascension of the Ascending Node (RAAN) ($\Omega$), eccentricity ($e$), argument of perigee ($\omega$), mean anomaly ($M$), mean motion ($n$) and the international designator, which is a unique code of a satellite. In the Figure \ref{tle}, it can be seen an example dataset with all the information that TLE carries.
 
+%The epoch defines the time to which all of the time-varying fields in the TLE are referenced. In the first line of  the TLE, the last two digits of epoch year can be found in the columns 19-20 (in this case "09"), and the day of the year and fractional portion of the day for the epoch can be found in columns 21-32 (in this case "156.84140383"). In this TLE is referred to 19 May 2009.
+
 More specifically, the epoch date is the number of days passed in the particular year. The information about the year is taken from the first two digits of the parameter and from the following digits the exact month, day, epoch hour, minute and second can be found. Finally, the epoch time is calculated in seconds as:
 
 \begin{equation}
@@ -194,13 +196,16 @@ This is due to the Earth's rotation, as it can be seen in the Figure \ref{ground
 \subsubsection{Perturbation on the orbital elements}
 \bigskip
 
-Since the focus of this application is on the low earth orbit (LEO) satellites, the gravity field is the largest perturbation, which cause secular motion to some of the orbital elements. The RAAN is one the affected by the zonal harmonics, and the equation that describes it:
+As a first approximation, it is reasonable to treat Earth as spherically with constant mass density. However, since this software requires long-term orbit propagations in order to produce the desired outcome of the revisit time, a better approximation of the Earth should be considered.
+
+In reality, Earth is not exactly spherical, but oblate, which affects the orbit calculations as described below. 
+Additionally, the focus of this application is on the low earth orbit (LEO) satellites, to which the gravity field is the largest perturbation causing secular motion to some of the orbital elements. The RAAN is one of the affected orbital elements by the zonal harmonics. This means that the orbital plane itself rotates around Earth's N-S axis. The rate of precession is also called nodal regression and it is given by:
 \begin{equation}
 \dot{\Omega} = - \frac{3 n R_{\bigoplus}^{2} J_{2} \cos{i}}{2 a^{2}},
 \end{equation}
 where $R_{\bigoplus}$ is the radius of the Earth according to WGS-84 (6378.137 km), and as $n$ the mean motion is used \cite{Montenbruck}.
 
-Due to secular perturbations, the argument of perigee is also affected:
+Due to secular perturbations, the argument of perigee is also affected. The rate of precession is also called the apsidal rotation and it is given by:
 \begin{equation}
 \dot{\omega} = - \frac{3 n R_{\bigoplus}^{2} J_{2}}{4 a^{2}} (1 - 5 \cos^{2}{i}).
 \end{equation}
