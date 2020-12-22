@@ -1,7 +1,8 @@
 
 \documentclass[12pt,a4paper,notitlepage,oneside,openright]{report}
-%\documentclass[12pt,a4paper,draft,notitlepage,twoside,openright]{report}
+%\documentclass[12pt,a4paper,draft,notitlepage,twoside,openright]{report} %If i will print it, then use the "twoside".
 
+\usepackage{listings}
 %Libraries for greek
 \usepackage{xltxtra}
 %\usepackage{xgreek} 
@@ -75,6 +76,7 @@
 
 \usepackage{color} 								%hilight pachage
 \usepackage[dvipsnames]{xcolor}
+\definecolor{commentsColor}{RGB}{75,62,154}
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}} %hilight color
 
 \usepackage[hang,flushmargin]{footmisc} %a range of footnote options - noindent
@@ -121,6 +123,7 @@
 \addcontentsline{toc}{chapter}{List of acronyms}
 \begin{abbrv}
 % American Institute of Aeronautics and Astronautics (AIAA)
+\item[\textit{AFSPC}] Air Force Space Command
 \item[\textit{ASI}] Agenzia Spaziale Italiana - Italian Space Agency
 \item[\textit{CONAE}] Comisión Nacional de Actividades Espaciales of Argentina - \newline Argentinian Space Agency
 \item[\textit{DMF}] Debris Mitigation Framework
@@ -146,16 +149,18 @@
 \item[\textit{MSU}] Multi-Spectral Scanner Unit
 \item[\textit{MUXCam}] Multi-Spectral Camera
 \item[\textit{NIR}] Near Infrared
+\item[\textit{OD}] Orbit Determination
 \item[\textit{ODCWG}] Orbital Debris Co-ordination Working Group
 \item[\textit{OECD}] Organization for Economic Co-operation and Development
 \item[\textit{PAN}] Panchromatic Imager
 \item[\textit{SAR}] Synthetic Aperture Radar
 \item[\textit{SIRAL}] SAR Interferometry Radar Altimeter
+\item[\textit{SPCS}] Space Control Squadron
 \item[\textit{SSO}] Sun-Synchronous Orbit
 \item[\textit{SSR}] Space Sustainability Rating
 \item[\textit{SWIR}] Short-Wave Infrared Light
 \item[\textit{UN}] United Nations
-\item[\textit{UNCOPUOUS}] United Nations Committee on the Peaceful Uses of Outer Space
+\item[\textit{UNCOPUOS}] United Nations Committee on the Peaceful Uses of Outer Space
 \item[\textit{UNOOSA}] United Nations Office for Outer Space Affairs
 \item[\textit{VNIR}] Visible and Near-infrared
 \item[\textit{WEF}] World Economic Forum
@@ -199,7 +204,8 @@
 \bibitem{Kramer 2002} Kramer H (2002) Observation of the Earth and its Environment. Springer Verlag, 4th ed., p.1514, Updated version: Apr, 2020 Available at: https://directory.eoportal.org/web/eoportal/kramer
 \bibitem{Newspace} Kulu E (2020) NewSpace Index - Overview of commercial satellite constellations. [Database] Available at: https://www.newspace.im/
 \bibitem{Lapaine} Lapaine M, Usery EL (2017) Choosing a map projection. Cham: Springer
-\bibitem{Letizia 2019} Letizia F, Lemmens S, Bastida Virgili B, Krag H. (2019) Application of a debris index for global evaluation of mitigation strategies. Acta Astronautica. 161:348–62.
+\bibitem{Lemmens} Lemmens S, Krag H (2014) Two-Line-Elements-Based Maneuver Detection Methods for Satellites in Low Earth Orbit. Journal of Guidance, Control, and Dynamics, 37(3), 860–868.
+\bibitem{Letizia 2019} Letizia F, Lemmens S, Bastida Virgili B, Krag H (2019) Application of a debris index for global evaluation of mitigation strategies. Acta Astronautica. 161:348–62.
 \bibitem{Luo} Luo X, Wang M, Dai G, Chen X (2017) A novel technique to compute the revisit time of satellites and its application in remote sensing satellite optimization design. International Journal of Aerospace Engineering
 \bibitem{Oneweb_bankruptcy} Malik T (March 28, 2020) OneWeb, a satellite internet startup, files for Chapter 11 bankruptcy. SPACE.com [Internet] Available at: https://www.space.com/oneweb-satellite-internet-startup-files-for-bankruptcy.html (Accessed July 1, 2020)
 \bibitem{Meseguer} Meseguer J, Pérez-Grande I, Sanz-Andrés A (2012) Keplerian orbits - Spacecraft thermal control. Elsevier p.39-57
@@ -226,7 +232,6 @@
 \bibitem{crowded} Wattles J (Oct 9, 2020) Space is becoming too crowded, Rocket Lab CEO warns. CNN Business. Available at: https://edition.cnn.com/2020/10/07/business/rocket-lab-debris-launch-traffic-scn/index.html
 \bibitem{NRO} Werner D (Jun 21, 2020) NRO to award multiple imagery contracts by year’s end. Space News. Available at: https://spacenews.com/nro-to-award-multiple-imagery-contracts-by-years-end/ (Accessed July 30, 2020)
 \bibitem{Hongyun} Zhao Lei (Dec 2018) China begins space-based broadband project. Jiuquan Satellite Launch Center | chinadaily.com.cn Available at: https://www.chinadaily.com.cn/a/201812/22/WS5c1d82d6a3107d4c3a002337.html (Accessed July 1, 2020)
-%Lemmens, S., & Krag, H. (2014). Two-Line-Elements-Based Maneuver Detection Methods for Satellites in Low Earth Orbit. Journal of Guidance, Control, and Dynamics, 37(3), 860–868.
 
 
 
@@ -310,7 +315,7 @@
 	\thead{Prisma\\(1)} & \thead{2019} & \thead{5} & \thead{passive} &\thead{100} & \thead{5-30} & \thead{Civil} & \thead{Environment,\\Science}\\\hline	
 	\thead{Radarsat-2\\(1)} & \thead{2007} & \thead{7} & \thead{active} &\thead{500} & \thead{100} & \thead{Civil} & \thead{Environment,\\Security}\\\hline	
 	\thead{RCM\\(3)} & \thead{2019} & \thead{7} & \thead{active} &\thead{500} & \thead{100} & \thead{Civil} & \thead{Environment,\\Emergency}\\\hline
-	\thead{Saocom-1A\\(1)} & \thead{2018} & \thead{5} & \thead{active} &\thead{400} & \thead{100} & \thead{Civil} & \thead{Environment,\\Emergency}\\\hline
+	\thead{Saocom-1A\&1B\\(2)} & \thead{2018 \& 2020} & \thead{5} & \thead{active} &\thead{400} & \thead{100} & \thead{Civil} & \thead{Environment,\\Emergency}\\\hline
 	\thead{Sentinel-1\\(2)} & \thead{2014 \& 2016} & \thead{7.25} & \thead{active} &\thead{250, 400} & \thead{5} & \thead{Civil} & \thead{Environment,\\Emergency,\\Science,\\Security}\\\hline
 	\thead{Sentinel-2\\(2)} & \thead{2015 \& 2017} & \thead{7.25} & \thead{passive} &\thead{290} & \thead{10-20} & \thead{Civil} & \thead{Environment,\\Emergency,\\Science}\\\hline
 	\thead{Sentinel-3\\(2)} & \thead{2016 \& 2018} & \thead{7} & \thead{active} &\thead{1270} & \thead{300} & \thead{Civil} & \thead{Environment,\\Science}\\\hline
@@ -326,11 +331,164 @@
 \footnotesize{$^{**}$ {\scriptsize The first classification of an EO mission (Figure \ref{classification_1st_layer}).}}\\
 \footnotesize{$^{***}$ {\scriptsize The main objective of an EO mission (Figure \ref{classification_2nd_layer}).}}
 
-%\newpage
-%\chapter*{Appendix B}
-%\lhead{\emph{Appendix B}}
-%\label{appB}
-%\addcontentsline{toc}{chapter}{Appendix B}
-% In general, the Python packages used in this work are: numpy, math, matplotlib, datetime, configparser, seaborn, pandas, cartopy.crs \& psycopg2.
+\lstset{commentstyle=\color{commentsColor}\textit, escapechar=\&}
+\newpage
+\chapter*{Appendix B}
+\lhead{\emph{Appendix B}}
+\label{appB}
+\addcontentsline{toc}{chapter}{Appendix B}
+Some sections of the Python 3.8.5 code\footnote{\label{Python_packages}\textit{The code is written in Python 3.8.5 and the packages used in this work are: numpy, math, matplotlib, datetime, configparser, seaborn, pandas, cartopy.crs \& psycopg2.}}, which was written during this thesis, will be followed. First, it is presented how a connection pool is established for the database.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true] 
+
+from psycopg2 import pool
+
+class Database:
+    __connection_pool = None
+
+    @classmethod
+    def initialise(cls, **kwargs):
+        cls.__connection_pool = pool.SimpleConnectionPool(1,
+                                                          10,
+                                                          **kwargs)
+        # 1st and 2nd parameters are the min and max number of connections that
+        # can be done respectively.
+
+    @classmethod
+    def get_connection(cls):
+        return cls.__connection_pool.getconn()
+
+    @classmethod
+    def return_connection(cls, connection):
+        Database.__connection_pool.putconn(connection)
+
+    @classmethod
+    def close_all_connections(cls):
+        Database.__connection_pool.closeall()
+
+# Creation of a connection pooling in order not to connect, commit,
+# close all the time. With this you can control this procedure
+# and diminish the time spent into connecting.
+class CursorFromConnectionFromPool:
+    def __init__(self):
+        self.connection = None
+        self.cursor = None
+
+    def __enter__(self):
+        self.connection = Database.get_connection()
+        self.cursor = self.connection.cursor()
+        return self.cursor
+
+    def __exit__(self, exception_type, exception_value, exception_traceback):
+        if exception_value is not None: # e.g. TypeError, AttributeError, ValueError
+            self.connection.rollback()
+        else:
+            self.cursor.close()
+            self.connection.commit()
+        Database.return_connection(self.connection)
+\end{lstlisting}
+\end{center}
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+The transactions permissions between the Python 3.8.5 code that was written during the thesis and the PostgreSQL database are presented below.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true]
+
+from database import CursorFromConnectionFromPool
+
+class Retrieve_data:
+    def __init__(self, swath_width, id):
+        self.id = id
+        self.swath_width = swath_width
+
+    def __repr__(self):
+        return "Retrieve_data {}". format(self.id)
+
+    def get_data(self):
+        with CursorFromConnectionFromPool() as cursor:
+            cursor.execute("SELECT * FROM attributes WHERE swath_width = %s;", (self.swath_width,))
+            myresult = cursor.fetchall()
+        print(myresult)
+
+# Import_to_database_all is when the satellite does not exist in the database
+# and I add it together with the final result of its revisit time.
+class Import_to_database_all:
+    def __init__(self, int_des, satellite_name, epoch, i, Omega, e, omega, Mo,
+    n, date_launched, orbit_lifetime, sensor, swath_width, resolution,
+    median_zerolat, type_of_sensor, id):
+        self.int_des = int_des
+        self.satellite_name = satellite_name
+        self.epoch = epoch
+        self.i = i
+        self.Omega = Omega
+        self.e = e
+        self.omega = omega
+        self.Mo = Mo
+        self.n = n
+        self.date_launched = date_launched
+        self.orbit_lifetime = orbit_lifetime
+        self.sensor = sensor
+        self.swath_width = swath_width
+        self.resolution = resolution
+        self.median_zerolat = median_zerolat
+        self.type_of_sensor = type_of_sensor
+        self.id = id
+
+    def __repr__(self):
+        return "Import_to_database {}".format(self.int_des)
+
+    def save_to_db(self):
+        with CursorFromConnectionFromPool() as cursor:
+            # With "cursor" you can retrieve data and read row by row
+            # or execute sequences.
+            cursor.execute('INSERT INTO attributes (international_designator,&\newline&name, epoch, inclination, raan, eccentricity, omega, mean_anomaly,&\newline&mean_motion, date_launched, orbit_lifetime, sensors, swath_width,&\newline&resolution, revisit_time, type_of_sensor) VALUES&\newline&(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',&\newline&            (self.int_des, self.satellite_name, self.epoch, self.i, self.Omega,&\newline&            self.e, self.omega, self.Mo, self.n, self.date_launched,&\newline&            self.orbit_lifetime, self.sensor, self.swath_width, self.resolution,&\newline&            self.median_zerolat, self.type_of_sensor))
+\end{lstlisting}
+\end{center}
+
+Similarly, the function, with which all the parameters apart from the revisit time are inserted to the database, has been created.
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+
+The code written for importing data to the database is followed. Below it can be seen the example of the satellite FLOCK 4V-26.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true]
+
+TLE = '1 46825U 20061BQ  20344.95929060  .00003744  00000-0  20456-3
+09995 2 46825  97.4645  56.2899 0005339 282.0443  78.0188 15.14907924  6374'
+
+epoch = TLE[18:32]
+i = float(TLE[79:86])
+Omega = float(TLE[87:95])
+e = float('0.' + TLE[96:103])
+omega = float(TLE[104:112])
+Mo = float(TLE[113:122])
+n = float(TLE[122:133])
+
+int_des = '2020-061BQ'
+satellite_name = 'FLOCK 4V-26'
+date_launched = '2020.09.03'
+orbit_lifetime = '3'
+sensor = 'VSI, NIR'
+swath_width_all = '25, 100'
+resolution = '3.7'
+type_of_sensor = 'passive'
+sso = 'y'
+
+Database.initialise(user='postgres', password='1234', database='EO_satellites',
+host='localhost')
+
+add = Import_to_database_almost_all(int_des, satellite_name, epoch, i,
+Omega, e, omega, Mo, n, date_launched, orbit_lifetime, sensor, swath_width_all,
+resolution, type_of_sensor, sso, None)
+
+add.save_to_db()
+\end{lstlisting}
+\end{center}
+
+Consequently, via CursorFromConnectionFromPool() as it was seen above, the parameters can be stored in the database.
+
+% I was thinking of adding the database structures.. but ok - I think is enough (Check in folder "Database_PostgreSQL" for the .jpeg "Example_Database_Structures").
 
 \end{document}

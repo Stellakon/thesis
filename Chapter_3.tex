@@ -31,7 +31,7 @@ More specifically, the epoch date is the number of days passed in the particular
 
 \begin{equation}
 \label{epoch}
-\text{epoch day} = (\text{epoch hour} \cdot 3600) + (\text{epoch min} \cdot 60) + \text{epoch sec}.
+\text{epoch time} = (\text{epoch hour} \cdot 3600) + (\text{epoch min} \cdot 60) + \text{epoch sec}.
 \end{equation}
 
 % If I want to elaborate about epoch, Julian date > check about Julian calculation: https://geotimedate.org/julian-time-converter/
@@ -65,7 +65,7 @@ with $\mu$ being the geocentric gravitational parameter.
 % ALL THESE REMAIN UNCHANGED OVER TIME >> For the unperturbed 2-body problem!
 % MEAN ANOMALY AT EPOCH: Define position of satellite in time in a TLE.
 
-Apart from the parameters that were just mentioned, it is necessary to be added some parameters related to the Earth Observation sensor that the satellite has. The orbit lifetime, the type of sensor (see Section \ref{EO}) and the spatial resolution are some of them. However, the determining parameter in the calculation of the revisit time is the information of the swath width of the sensor, which is inserted in the units of kilometers. Swath is called the area of the Earth that is captured on the image and thus the bigger the number of swath is, the larger the area that is captured. In the Figure \ref{swath_width}, both the swath width and the spatial resolution are illustrated. Those parameters are usually inversely proportional; the higher spatial resolution, the less area is covered by a single image and thus the smaller the swath width. Finally, a parameter related to the viewing angle that the sensor has is the tilt angle. This angle designates whether the instrument points the Earth in a nadir direction or there is a pointing offset. 
+Apart from the parameters that were just mentioned, it is necessary to be added some parameters related to the Earth Observation sensor that the satellite has. The operational lifetime, the type of sensor (see Section \ref{EO}) and the spatial resolution are some of them. However, the determining parameter in the calculation of the revisit time is the information of the swath width of the sensor, which is inserted in the units of kilometers. Swath is called the area of the Earth that is captured on the image and thus the bigger the number of swath is, the larger the area that is captured. In the Figure \ref{swath_width}, both the swath width and the spatial resolution are illustrated. Those parameters are usually inversely proportional; the higher spatial resolution, the less area is covered by a single image and thus the smaller the swath width. Finally, a parameter related to the viewing angle that the sensor has is the tilt angle. This angle designates whether the instrument points the Earth in a nadir direction or there is a pointing offset. 
 % The swath width of the optical system is proportional to the orbit height. (Low altitude orbits have lack of coverage capability).
 
 \begin{figure}
@@ -121,7 +121,7 @@ The main idea of this task is the rotation of the orbital plane into the equator
 \dot{\vv{r_{b}}} = \sqrt{\frac{\mu}{a (1 - e^2)}} \begin{bmatrix} -\sin{v} \\ e + \cos{v} \\ 0 \end{bmatrix},
 \end{equation}
 
-where $\mu$ the geometric gravitational parameter (Equation \ref{3rd_keplers_law}).
+where $\mu$ the geocentric gravitational parameter (Equation \ref{3rd_keplers_law}).
 
 Then, the position and the velocity in the space-fixed system are found through \cite{Montenbruck}:
 \begin{equation}
@@ -231,9 +231,9 @@ This is due to the Earth's rotation, as it can be seen in the Figure \ref{ground
 As a first approximation, it is reasonable to treat Earth as spherically with constant mass density. However, since this software requires long-term orbit propagations in order to produce the desired outcome of the revisit time, a better approximation of the Earth should be considered.
 
 In reality, Earth is not exactly spherical, but oblate, which affects the orbit calculations as described below. 
-Additionally, the focus of this application is on the low Earth orbit (LEO) satellites, to which the gravity field is the largest perturbation causing secular motion to some of the orbital elements. In this work only the first-order zonal harmonics of J2, accounting for the Earth's flattening, are used. The higher order terms are omitted, since they are a few orders of magnitude lower.
+Additionally, the focus of this application is on the low Earth orbit (LEO) satellites, to which the gravity field is the largest perturbation causing secular motion to some of the orbital elements. In this work only the first-order zonal harmonics of J\textsubscript{2}, accounting for the Earth's flattening, are used. The higher order terms are omitted, since they are a few orders of magnitude lower.
 
-One of the affected orbital elements by the zonal harmonics of J2 is RAAN. This means that the orbital plane itself rotates around Earth's N-S axis. The rate of precession is also called nodal regression and it is given by:
+One of the affected orbital elements by the zonal harmonics of J\textsubscript{2} is RAAN. This means that the orbital plane itself rotates around Earth's N-S axis. The rate of precession is also called nodal regression and it is given by:
 \begin{equation}
 \dot{\Omega} = - \frac{3 n R_{\bigoplus}^{2} J_{2} \cos{i}}{2 a^{2}},
 \end{equation}
@@ -258,6 +258,7 @@ The goal of the first part of the application is to find the revisit time of the
 
 \bigskip
 \subsection{Computational calculation of revisit time}
+\label{how_to}
 \bigskip
 
 One key element needed in order to calculate the revisit time is the observation swath width, or the spatial extent or else the area that is captured on the ground by the satellite's sensor. This is an information that is already given, as stated in the Section \ref{input_data}, and this is the parameter of the swath width (see Figure \ref{swath_width}). Thus, taking into account the swath width, a grid in the global map can be created, which will be consisted of cells simulating the area on the ground that is captured by the satellite. The global map is represented as a two-dimensional map in comparison with a three-dimensional map, since the computations can be executed easier later.
@@ -278,7 +279,7 @@ The map projection that was chosen is a equidistant cylindrical, which forms a g
 \subsubsection{Grid creation}
 \bigskip
 
-The grid that is created on the global map consists of quadratic cells, whose edge length corresponds to the swath width. Since the global map handles geographic degrees, 360 degrees in the longitude and 180 degrees in the latitude, the swath width needs to be converted as it was given originally in the unit of kilometers. This conversion is based on the circumference of the Earth, which is roughly 40,000 km, divided by 360 degrees. As a rule of thumb, 111 kilometers are approximately 1 degree and for simplification reasons in the Equation \ref{grid_interval} the conversion rate of 0.008 is used. Thus, the interval between the cells, which is also named as grid interval in this application, can be found from the equation:
+The grid that is created on the global map consists of quadratic cells, whose edge length corresponds to the swath width. Since the global map handles geographic degrees, 360 degrees in the longitude and 180 degrees in the latitude, the swath width needs to be converted as it was given originally in the unit of kilometers. This conversion is based on the circumference of the Earth, which is roughly 40,000 km, divided by 360 degrees. As a rule of thumb, 111 kilometers are approximately 1 degree and for simplification reasons in the Equation \ref{grid_interval} the conversion rate of $0.008 \text{ degrees/ km}$ is used. Thus, the interval between the cells, which is also named as grid interval in this application, can be found from the equation:
 \begin{equation}
 \label{grid_interval}
 \textit{grid interval} \text{ [degrees]} = \textit{swath width} \text{ [km]} \cdot 0.008
@@ -303,12 +304,23 @@ As it was mentioned before, the map projection that is used, exhibits distortion
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\textwidth]{Images/distortion_show-swath-width.png}\caption{A near-polar orbit illustration of a sun-synchronous meteorological satellite. Its instrument scans approximately 3000 km wide swath. Due to the map distortion, the viewing area seems to be larger when the satellite passes closer to the poles. \textit{Source: National Center for Atmospheric Research, Boulder, Colorado, USA. Url: ral.ucar.edu/~djohnson/satellite/coverage.html (Accessed September 30, 2020)}}
+\includegraphics[width=0.9\textwidth]{Images/distortion_show-swath-width.png}\caption{A near-polar orbit illustration of a Sun-synchronous meteorological satellite. Its instrument scans approximately 3000 km wide swath. Due to the map distortion, the viewing area seems to be larger when the satellite passes closer to the poles. \textit{Source: National Center for Atmospheric Research, Boulder, Colorado, USA. Url: ral.ucar.edu/~djohnson/satellite/coverage.html (Accessed September 30, 2020)}}
 \label{distortion_show-swath-width}
 \end{figure}
 
-For the correction due to the map distortion, the simple assumption of a spherical Earth has been made. Then, it has been assumed, that the equator's length is 360 degrees, whereas the meridians of the Earth intersect on the poles, leading to a point (zero length) in the poles. As it can be seen in Figure \ref{correction_map_distortion}, the hypotenuse of the illustrated triangle is found using the Pythagorean theorem, and based on this side, the angle $\phi$ is found from: $$ \cos{\phi} = \frac{90}{\text{hypotenuse}}.$$
-Thus, based on the $\phi$ angle (constant) and the latitude of the sub-satellite point, a swath width depicting the area that the satellite is actually scans, is calculated. In this way, the distortion is corrected.
+For the correction due to the map distortion, the Earth is assumed to be conical. In this case, the equator's length is 360 degrees, whereas the meridians of the Earth intersect on the poles, leading to a point (zero length) in the poles. As it can be seen in Figure \ref{correction_map_distortion}, the hypotenuse of the illustrated triangle is found using the Pythagorean theorem \footnote{\label{Pythagorean}\textit{Thus, the hypotenuse in this case is calculated as: $\textit{hypotenuse} = \sqrt{180^{2} + 90^{2}}$}}, and based on this side, the angle $\phi$ is found from: $$ \cos{\phi} = \frac{90}{\textit{hypotenuse}}.$$
+Thus, based on the angle $\phi$ (constant), the actual longitudinal length of the Earth (\textit{new longitude}) for every \textit{latitude} of the sub-satellite point due to the map distortion, can be found from the following equation:
+\begin{equation}
+\label{newlong}
+\textit{new longitude} \text{ [degrees]} = \left[ \tan\phi \cdot (90 - \lvert \textit{latitude} \footnotemark \rvert) \right] \cdot 2.
+\end{equation}\footnotetext{\label{latitude}\textit{The value of latitude is in degrees.}}In this equation, the absolute value of the \textit{latitude} ensures that even if the sub-satellite point is located in the southern hemisphere, the result of the \textit{new longitude} will be accurate. Moreover, in the Equation \ref{newlong} the right side term is multiplied by two in order the longitudinal length of the Earth along the whole map, or else the circumference of the cone at a specific \textit{latitude} to be found.
+
+Then, based on the value from the Equation \ref{newlong}, the following can be found: how many times the already calculated \textit{grid interval} (see Equation \ref{grid_interval}) fits into the \textit{new longitude} based on the number of cells that have been created along the longitude during the creation of the grid (see previous Section). The equation computing the result of this procedure is:
+$$ \textit{new grid interval} \text{ [degrees]} = \Bigg \{ \dfrac{\textit{grid interval}}{\dfrac{\textit{new longitude}}{\textit{\# of cells \footnotemark}}} \Bigg \} \cdot \textit{grid interval} $$
+\footnotetext{\label{foot}\textit{This value corresponds to the \# of cells along the longitude. It also needs to be mentioned that the units of "grid interval" and "new longitude" are degrees.}}
+
+Therefore, in case the latitude of a sub-satellite point is not zero (meaning that it is not at the equatorial plane), the corners of the image are calculated based on the \textit{new grid interval}. Thus the area that is actually scanned by the satellite is calculated, since the distortion has been corrected.
+%which parameter is connected to the \textit{grid interval} and this to the swath width (Equation \ref{grid_interval}).
 
 \begin{figure}
 \centering
@@ -321,12 +333,12 @@ Thus, based on the $\phi$ angle (constant) and the latitude of the sub-satellite
 \bigskip
 
 Before the actual procedure of counting cells starts, it should be assured that the interval between the sub-satellite points will give enough information for the revisit time calculation. To be more specific, during the orbit that is depicted in the groundtrack, there should not be empty cells neither too many points on the same area, so that it seems that the satellite has passed more than once. This so-called space-time sampling in the LEO satellites is dependent on the orbit. For this reason, the height of the satellite should be considered. The height of the satellite is given through the semi-major axis $a$, which is connected with the mean motion $n$ through the Equation \ref{3rd_keplers_law}. From the equation: $$n = \frac{2 \pi}{T}, $$
-the information of the period $T$ is found, with which the interval between the points can be calculated. It is a fact that in one orbit (one period) the satellite passes above 360 degrees in longitude, as it can be seen in Figure \ref{ascending-descending} showing the groundtrack of Sentinel-2A. Then, the unknown time interval can be found through the equation:
+the information of the period $T$ is found, with which the interval between the points can be calculated. It is a fact that in one orbit (one period) the satellite passes more than 360 degrees in longitude, as it can be seen in Figure \ref{ascending-descending} showing the groundtrack of Sentinel-2A. Then, the unknown time interval can be found through the equation:
 \begin{equation}
 \textit{interval} = \frac{\textit{grid interval} \cdot T}{360 \text{ [degrees]}}
 \end{equation}
 
-since the grid interval is known (Equation \ref{grid_interval}).
+since the grid interval is known (Equation \ref{grid_interval}). However, it needs to be mentioned that this equation is not valid for Geostationary satellites, for which the $\textit{interval}$ is not a useful parameter as well. The reason is that a geostationary satellite remains in the same position in the sky to observers on the surface and does not pass above other areas.
 
 % Change how to find the interval: for LEO the Δλ is about 340 degrees and for a retrograde orbit the Δλ is about 380 degrees! I used 360 degrees (for everything) \cite{Vallado}. Source Vallado p.149
 
@@ -359,7 +371,7 @@ It also needs to be mentioned that the coverage area along the equator is depend
 \subsubsection{Tracking modification depending on sensor type}
 \bigskip
 
-One determinant parameter of the revisit time calculation is the swath width of the sensor as it was analyzed above. Nevertheless, the sensor type can change the final calculation. This is for example whether the instrument belongs to the passive or active imagery sensors (see section \ref{EO}). The reason behind is that when a satellite has passive instrument on board, it needs to be on the sunlit side of the Earth since those sensors record the reflected solar energy. Most of the EO satellites today are in near-polar sun-synchronous orbits, which have the following characteristic. The descending pass of the satellite, which is when the satellite travels southwards, is usually on the sunlit side in the case of a sun-synchronous orbit \cite{Kramer 2002}. For this reason, it is assumed that all the sun-synchronous EO satellites used in this software are on the sunlit side during the descending pass of their orbit.
+One determinant parameter of the revisit time calculation is the swath width of the sensor as it was analyzed above. Nevertheless, the sensor type can change the final calculation. This is for example whether the instrument belongs to the passive or active imagery sensors (see section \ref{EO}). The reason behind is that when a satellite has passive instrument on board, it needs to be on the sunlit side of the Earth since those sensors record the reflected solar energy. Most of the EO satellites today are in near-polar Sun-synchronous orbits, which have the following characteristic. The descending pass of the satellite, which is when the satellite travels southwards, is usually on the sunlit side in the case of a Sun-synchronous orbit \cite{Kramer 2002}. For this reason, it is assumed that all the Sun-synchronous EO satellites used in this software are on the sunlit side during the descending pass of their orbit.
 
 This application, therefore, checks whether the satellite has a passive sensor or not, and in case it has, the revisit time is calculated only for the descending passes of the satellite. In the Figure \ref{ascending-descending}, one orbit of the Sentinel-2A is shown; the mean local solar time (MLST) at the descending node is 10:30 (am) \footnote{\label{MLST_Sentinel2}\textit{Available at: https://sentinel.esa.int/web/sentinel/missions/sentinel-2/satellite-description/orbit (Accessed December 1, 2020)}}, which means that the descending pass is on the sunlit side of the Earth and the ascending on the shadowed.
 
@@ -388,6 +400,8 @@ Yet another parameter that can change the calculation of the revisit time is whe
 \bigskip
 
 The final calculations of the combined revisit time along the equator or along a line of latitude of interest to the user are described below. As it was mentioned above, the longitude cells have been created based on the swath width, whose length was found from the Equation \ref{grid_interval}. Whenever the satellite passes from each of those cells, the time of passage is saved. Then, based on those timestamps, the time elapsed between two successive observations is calculated for every longitude cell individually. In other words, the revisit rate between the successive passages from every longitude cell is found and then the average of those.
+
+Nevertheless, it needs to be highlighted that the revisit rate between every successive observations or else timestamps, is taken into account only when is larger than the threshold of two seconds. This has been set for example regarding cases, in which the calculation of the revisit time is performed between satellites that some of them are in the same orbital position as another ones. Thus, in this way a result, which would not correspond to reality, since there would not be two satellites orbiting Earth from the exact same orbital position, is avoided.
 
 Finally, in order to calculate the combined revisit time at the equator or at a specific latitude, the longitude cells that have not been passed from the satellite are not taken into account. The average of the revisit rates that have been found from all the rest longitude cells that the satellite has passed, is calculated creating the final result. The reason why the longitude cells, from which the satellite has not passed, are not taken into consideration is because the final result of the revisit time will be inaccurate, since it will be also affected by these cells, which seem to have zero average revisit rate, whereas it is zero due to the fact that the satellite never passed. \footnote{\label{Flock_source}\textit{It should be mentioned that for the realization of those calculations, lists of predetermined length filled with zeros are created beforehand for computational reasons. This is the reason why the cells, from which the satellite has not passed, have zero value in the list in which the average revisit time of every longitude cell along the equator or a line of latitude is stored.}}
 
@@ -435,7 +449,7 @@ The sources of the data are numerous. For this reason, another table containing 
 
 It has been noticed that in the existed databases, like ESA's DISCOS, there is only a very coarse classification available or none at all. This lack of distinction between the EO missions makes the search of added value of a satellite even harder. This happens due to the fact that the main objective of the mission is missing as an information from the existing databases. For this reason, a classification of EO field was made.
 
-The categorization of the EO field is consisted of two main layers. The first one, which is the most general, refers to the source of funding of the mission as well as to the target group, which will use the satellite's output. So, in this layer the options are either commercial, research, defense, or civil (Figure \ref{classification_1st_layer}).
+The categorization of the EO field is consisted of two main layers. The first one, which is the most general, refers to the source of funding of the mission as well as to the target group, which will use the satellite's output. So, in this layer the options are either commercial, defense, or civil (Figure \ref{classification_1st_layer}).
 
 \begin{figure}
 \centering
@@ -443,7 +457,7 @@ The categorization of the EO field is consisted of two main layers. The first on
 \label{classification_1st_layer}
 \end{figure}
 
-The second layer refers to the main objective of the mission. This can be related to environmental monitoring, emergency management, science, or security. These two aforementioned layers are not interconnected. This means that a satellite can have attributes with any possible combination of those. The rest of the layers are connected to the second one as it can be seen in Figure \ref{classification_2nd_layer}. In other words, from the main objective of a mission (second layer), a more explanatory and detailed description of the mission's goal is given in those labels.
+The second layer refers to the main objective of the mission. This can be related to security, environmental monitoring, emergency management, or science. These two aforementioned layers are not interconnected. This means that a satellite can have attributes with any possible combination of those. The rest of the layers are connected to the second one as it can be seen in Figure \ref{classification_2nd_layer}. In other words, from the main objective of a mission (second layer), a more explanatory and detailed description of the mission's goal is given in those labels.
 
 \begin{figure}[!htb]
 \centering
