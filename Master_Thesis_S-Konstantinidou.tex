@@ -337,7 +337,445 @@
 \lhead{\emph{Appendix B}}
 \label{appB}
 \addcontentsline{toc}{chapter}{Appendix B}
-Some sections of the Python 3.8.5 code\footnote{\label{Python_packages}\textit{The code is written in Python 3.8.5 and the packages used in this work are: numpy, math, matplotlib, datetime, configparser, seaborn, pandas, cartopy.crs \& psycopg2.}}, which was written during this thesis, will be followed. First, it is presented how a connection pool is established for the database.
+Some sections of the Python 3.8.5 code\footnote{\label{Python_packages}\textit{The code is written in Python 3.8.5 and the packages used in this work are: numpy, math, matplotlib, datetime, configparser, seaborn, pandas, cartopy.crs \& psycopg2.}}, which were written during this thesis, will be followed. At first, the main functions and parameters used in this software are presented.
+
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true]
+# Input: Keplerian orbital elements - Output: the polar coordinates r (radius)
+# and v (true anomaly)
+def kep2orb(e, Mo, n, t, a, epoch_time):
+    M = n * (t - epoch_time) + Mo
+    M = M - 2 * (math.pi * math.floor(M / (2 * math.pi))) # M ranges from [0-2pi]
+    E = M
+    delta_E = 10
+    while abs(delta_E) >= 10**(-6):
+        delta_E = (M + (e * math.sin(E)) - E) / (1 - (e * math.cos(E)))
+        E = E + delta_E
+    E =  E - 2 * math.pi * (math.floor(E/ (2 * math.pi))) # E ranges from [0-2pi]
+
+    r = a * (1 - (e * math.cos(E))) #Radius
+    v = 2 * np.arctan2((math.sqrt(1+e) * math.sin(E/2)),
+    (math.sqrt(1-e) * math.cos(E/2)))#True anomaly
+    return r, v
+
+def position_orbital(r_total, v_total): 
+    r_orbital = (np.dot(r_total, math.cos(v_total)),
+    np.dot(r_total, math.sin(v_total)), np.dot(r_total, 0))
+    return r_orbital
+
+def velocity_orbital(v_total, e, a):
+    v_orbital = (np.dot(math.sqrt(GM / (a*(1 - e**2))),
+    -math.sin(v_total)), np.dot(math.sqrt(GM / (a*(1 - e**2))),
+    e + math.cos(v_total)), np.dot(math.sqrt(GM / (a*(1 - e**2))), 0))
+    return v_orbital
+
+def position_space(Omega, omega, i, r_orbital):
+# Calculate position in space-fixed system
+    i = np.dot([[math.cos(-Omega), math.sin(-Omega), 0]
+    [-math.sin(-Omega), math.cos(-Omega), 0], [0, 0, 1]], [[1, 0, 0],
+    [0, math.cos(-i), math.sin(-i)], [0, -math.sin(-i), math.cos(-i)]])
+    j = np.dot(i, [[math.cos(-omega), math.sin(-omega), 0],
+    [-math.sin(-omega), math.cos(-omega), 0], [0, 0, 1]])
+    r_space = np.dot(j, r_orbital)
+    return r_space
+
+def position_earth(theta, r_space):
+    r_earth = np.dot([[math.cos(theta), math.sin(theta), 0],
+    [-math.sin(theta), math.cos(theta), 0], [0, 0, 1]], r_space)
+    return r_earth
+
+def longitude(rx_earth, ry_earth):
+    long = np.arctan2(ry_earth, rx_earth) * 180 / np.pi
+    # Multiply 180/np.pi to have degrees.
+    return long
+
+def latitude(rx_earth, ry_earth, rz_earth):
+    lat = np.arctan2(rz_earth, (math.sqrt((rx_earth ** 2) +
+    (ry_earth ** 2)))) * 180 / np.pi
+    # Multiply 180/np.pi to have degrees.
+    return lat
+
+# Define Parameters
+GM = 398.6005* 10**(12) # Geocentric gravitational parameter [m**3/s**2]
+Omega_earth = (2 * math.pi) / 86164
+R_earth = 6378137 # [m]
+J_2 = 0.0010826267
+\end{lstlisting}
+\end{center}
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+
+The first orbital calculations are computed, as it can be seen below, after the TLE set of the desired satellite/s has been plugged in to the python code from the PostgreSQL database. In the "id_list" parameter, the id numbers that the satellites have in the database, need to be inserted in a form of a list.
+%An example of the software asking the user whether he/she is interested in finding out about the revisit time at a specific latitude other than equator.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true]
+start = 0
+id_list = [...]
+satellite_name_list = []
+for id in id_list:
+    Database.initialise(user='postgres', password='1234',
+    database='EO_satellites', host='localhost')
+    with CursorFromConnectionFromPool() as cursor:
+        cursor.execute('SELECT * FROM attributes where id = %i' %id)
+        myresult = cursor.fetchall()
+    for row in myresult:
+        # Parameter: international designator
+        int_des = row[1]
+        # Parameter: name
+        satellite_name = row[2]
+        if len(id_list) > 1:
+            satellite_name_list += [satellite_name]
+        # Parameter: epoch
+        epoch = row[3]
+        if epoch != '0':
+            epoch_year = epoch[:2]
+            YY = int(epoch[:2]) + 2000
+            epoch_day = int(epoch[2:5])
+            t = datetime.datetime(YY, 1, 1) + datetime.timedelta(epoch_day - 1)
+            MM = int(t.strftime('%m'))
+            DD = int(t.strftime('%d'))
+            epoch_hour = int(float("0" + epoch[5:]) * 24)
+            epoch_min = int((float("0" + epoch[5:]) * 24 - epoch_hour) * 60)
+            epoch_sec = int((((float("0" + epoch[5:]) * 24 - epoch_hour) * 60) -
+            epoch_min) * 60)
+            epoch_time = int((epoch_hour * 3600) + (epoch_min * 60) + epoch_sec)
+            # Epoch in seconds
+            JD = (367 * YY) - int((7 * (YY + int((MM + 9) / 12))) / 4) +
+            int((275 * MM) / 9) + DD + 1721013.5 
+            # Calculation of JD in 0h (without hour, min, sec)
+            T_u = (JD - 2451545) / 36525
+            # Julian centuries
+            sidereal_angle = 24110.54841 + (8640184.812866 * T_u) +
+            0.093104 * (T_u ** (2)) - 6.2 * (10 ** (-6)) * (T_u ** (3))
+            # GMST for 0h (Greenwich Mean Sidereal Time at midnight)
+            Omega_earth = (1.002737909350795 + 5.9006 * 10**(-11) * T_u -
+            5.9*10**(-15) * T_u**(2) )*7.2722052166431 * 10 ** (-5)
+            integ, d = divmod(sidereal_angle, 1)
+            # Separate the integer and decimal part of sidereal angle
+            sidereal_angle_s = ((int((-integ + 1) / 86400) * 86400) + integ) + d
+            # sidereal angle in sec. Reduce the quantity to a result within the
+            # range of 86400s (= 1 day). This is for solar day.
+            sidereal_angle_deg = sidereal_angle_s / 240
+            # sidereal angle in degrees. Because: 1s = 1/240deg.
+            if sidereal_angle_deg < 0:
+                sidereal_angle_deg = sidereal_angle_deg + 360
+                # If number is negative, add 360deg to get final answer
+            sidereal_angle_rad = np.radians(sidereal_angle_deg)
+            # sidereal angle in radians
+        # Parameter: i
+        i = row[4]
+        i_radian = np.radians(i) # Convert units - From degrees to radians.
+        # Parameter: Omega
+        Omega = row[5]
+        Omega_radian = np.radians(Omega) # Convert units - From degrees to radians.
+        # Parameter: e
+        e = row[6]
+        # Parameter: omega
+        omega = row[7]
+        omega_radian = np.radians(omega) # Convert units - From degrees to radians.
+        # Parameter: Mo
+        Mo = row[8]
+        M_radian = np.radians(Mo)
+        # Parameter: n
+        n = row[9]
+        n = 7.2722052166431 * 10 ** (-5) * n  # From rev/day to rad/sec
+        a = (GM / (n ** 2)) ** (1. / 3)  # Semi major axis
+        T = 2 * math.pi / n
+        # Parameter: date_launched
+        date_launched = row[10]
+        # Parameter: orbit_lifetime
+        orbit_lifetime = row[11]
+        # Parameter: sensor
+        sensor = row[12]
+        # Parameter: Swath_Width (in km)
+        swath_width_all = row[13]
+        swath_width_list_str = swath_width_all.split(', ')
+        swath_width_list_num = []
+        # This will be a list consisted of all the swath widths
+        # in numeric representation (not string).
+        for i in swath_width_list_str:
+            swath_width_list_num.append(float(i))
+        swath_width = int(max(swath_width_list_num))
+        # Here I calculate the max of the swath widths that are given and the
+        # application will calculate the revisit time only on this swath width.
+        grid_interval = swath_width * 0.008  # degrees.
+        # The grid_interval is the gap between the gridlines.
+        # Parameter: resolution
+        resolution = row[14]
+        # Parameter: type_ of_sensor. Either "active" or "passive".
+        type_of_sensor = row[16]
+
+        period = math.ceil(T)
+        num_orbits = 1
+        duration = period * num_orbits
+
+\end{lstlisting}
+\end{center}
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+
+The orbit computation procedures are presented below.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true] 
+		# The polar coordinates r (radius) and v (true anomaly):
+        for num in range(epoch_time, epoch_time + duration):
+            rv_total.append(kep2orb(e, M_radian, n, num, a, epoch_time))
+        r_total = [x[0] for x in rv_total]
+        v_total = [x[1] for x in rv_total]
+        
+        # Calculate position and velocity in orbital plane
+        r_orbital = []
+        v_orbital = []
+        for num in range(len(r_total)):
+            r_orbital.append(position_orbital(r_total[num], v_total[num]))
+            v_orbital.append(velocity_orbital(v_total[num], e, a))
+
+        # Secular effects from Zonal harmonics
+        p = a * (1 - e ** (2))
+        Omega_sec = - (3 * n * R_earth ** (2) * J_2 * math.cos(i_radian)) /
+        (2 * p ** (2))  # In rad/sec.
+        omega_sec = ((3 * n * R_earth ** (2) * J_2) / (4 * p ** (2))) *
+        (4 - 5 * math.sin(i_radian) ** (2))  # In rad/sec
+
+        # Calculate position and velocity in space-fixed system
+        r_space = []
+        v_space = []
+        for num in range(len(r_orbital)):
+            r_space.append(position_space(Omega_radian, omega_radian,
+            i_radian, r_orbital[num]))
+            Omega_radian = Omega_radian + Omega_sec
+            omega_radian = omega_radian + omega_sec
+        rx_space = [x[:][0] for x in r_space]
+        ry_space = [x[:][1] for x in r_space]
+        rz_space = [x[:][2] for x in r_space]
+        
+        # Calculate position and velocity in Earth-fixed system
+        interval = math.floor((grid_interval * T) / 360) 
+        r_earth = []
+        v_earth = []
+        r_space = [tuple(x) for x in r_space]
+        for num in range(0, duration, interval):
+            theta = (Omega_earth * num) + sidereal_angle_rad
+            r_earth.append(position_earth(theta, r_space[num]))
+            
+        r_earth = [tuple(x) for x in r_earth]
+        rx_earth = [x[:][0] for x in r_earth]
+        ry_earth = [x[:][1] for x in r_earth]
+        rz_earth = [x[:][2] for x in r_earth]
+
+        # Calculate the longitude and latitude (ground-tracks) on the Earth surface
+        long = []
+        lat = []
+        for num in range(len(rx_earth)):
+            long.append(longitude(rx_earth[num], ry_earth[num]))
+            lat.append(latitude(rx_earth[num], ry_earth[num], rz_earth[num]))
+
+\end{lstlisting}
+\end{center}
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+
+The code related to the grid creation is presented below.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true] 
+		# Calculate the size of the grid based on the grid_interval
+        remainder_x = math.modf((180 - (grid_interval / 2)) / grid_interval)
+        remainder_y = math.modf((90 - (grid_interval / 2)) / grid_interval)
+        
+        # Define the borders of the gridlines and save the elapsed time
+        in seconds that the satellite passes from the 0 latitude/ equator
+        in the array "time".
+        plus_x = 0
+        plus_y = 0
+        if remainder_x[0] > 0: plus_x = 1
+        if remainder_y[0] > 0: plus_y = 1
+        size_x = int((remainder_x[1] + plus_x) * 2 + 1)
+        size_y = int((remainder_y[1] + plus_y) * 2 + 1)
+        heat_data = np.zeros((size_x, size_y))
+        if remainder_y[0] == 0.0:
+            w1 = - 90.0
+        else:
+            w1 = - 90.0 + (remainder_y[0] * grid_interval) - grid_interval
+        if remainder_x[0] == 0.0:
+            w2 = - 180.0
+        else:
+            w2 = - 180.0 + (remainder_x[0] * grid_interval) - grid_interval
+        w3 = -w1
+        w4 = -w2
+
+        la = np.linspace(w1, w3, heat_data.shape[1] + 1)
+        lo = np.linspace(w2, w4, heat_data.shape[0] + 1)
+        la[0] = -90
+        la[-1] = 90
+        lo[0] = -180
+        lo[-1] = 180
+
+        # Find the number of the cell in the y direction that corresponds to
+        # the latitude that the user is interested in knowning the revisit time.
+        for l in range(0, size_y):
+            if zerolat4revisittime >= la[l] and
+            zerolat4revisittime <= la[l + 1]:
+                cell_zerolat4revisittime = l
+            if request4revisittime != 0:
+                if latitude4revisittime >= la[l] and
+                latitude4revisittime <= la[l + 1]:
+                    cell_latitude4revisittime = l
+
+        # Create one array with both long and lat values
+        long_n_lat = [(long[i], lat[i]) for i in range(0, len(long))]
+
+        # The "col_size_revisit_time" is a random number of columns in which
+        # the time that the satellite passes from the cells will be saved.
+        col_size_revisit_time = 60
+        revisit_time_zerolat = np.zeros((size_x, col_size_revisit_time))
+		# If the user has asked also other latitude than zero to know about the
+		# revisit time. The array "revisit_time_latitude4" saves the info
+		# about the time.        
+        if request4revisittime != 0:
+            revisit_time_latitude4 = np.zeros((size_x, col_size_revisit_time))
+
+\end{lstlisting}
+\end{center}
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+
+In the section below, the code responsible for correcting the map distortion assuming that the Earth is conical, is presented.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true] 
+
+		hypotenuse = math.sqrt(180 ** 2 + 90 ** 2)
+        phi = np.arccos(90 / hypotenuse)  # The result is in radians.
+        tan_phi = math.tan(phi)
+        # The value "new_long" is referred as new longitude in the thesis.
+        # In which cells of the grid do the corners of the final image fall?
+        for count, val in enumerate(long_n_lat):
+            cell_x = []
+            cell_y = []
+            # The "extra_x" and "extra_y" count the cells that fall
+            # on the other part of the globe.
+            extra_cells = []
+            extra_x = []
+            extra_y = []
+
+			# See Chapter 3, Section 3.1.3, Correction of map distortion
+            if val[1] != 0:
+                new_long = (tan_phi * (90 - abs(val[1]))) * 2
+                # How many times does the already predefined grid_interval
+                # fits in the new division of the new_long value
+                # based on the size_x?
+                new_grid_interval = (grid_interval / (new_long / (size_x - 1)))
+                * grid_interval
+                # Corners of the image/ swath width (x_0, x_1, y_0, y_1)
+                x_0 = val[0] - new_grid_interval / 2
+                x_1 = val[0] + new_grid_interval / 2
+            else:
+                x_0 = val[0] - grid_interval / 2  # Bottom left (x-direction)
+                x_1 = val[0] + grid_interval / 2  # Bottom right (x-direction)
+            y_0 = val[1] - grid_interval / 2  # Bottom left (y-direction)
+            y_1 = val[1] + grid_interval / 2  # Upper left (y-direction)
+
+\end{lstlisting}
+\end{center}
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+
+The first section of the code, which calculates the revisit time, is presented below.
+\begin{center}
+\begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true] 
+            if type_of_sensor == 'passive': 
+            # In case the satellite has a passive sensor:
+                if count == (len(
+                        long_n_lat) - 1): 
+                    if desc_check == 1:
+                    # The parameter "desc_check" checks whether the
+                    # sub-satellite point belongs to a descending pass
+                        for n in range(0, size_y):
+                            if y_0 >= la[n] and y_0 <= la[n + 1]:
+                                if (la[n + 1] - y_0) >= grid_interval / 2:
+                                    cell_y.append(n)
+                                else:
+                                    cell_y.append(n + 1)
+                            elif y_0 < - 90:
+                                if abs(y_0) - 90 >= grid_interval / 2:
+                                    cell_y.append(size_y - 2)
+                                else:
+                                    cell_y.append(size_y - 1)
+                            if y_1 >= la[n] and y_1 <= la[n + 1]:
+                                if (y_1 - la[n]) >= grid_interval / 2:
+                                    cell_y.append(n)
+                                    break
+                                else:
+                                    cell_y.append(n - 1)
+                                    break
+                        if y_1 > 90: 
+                        # This condition is out of the for loop in order
+                        # to make sure that the first element in cell_y
+                        # will be the y_0 and not the y_1.
+                            if abs(y_1) - 90 >= grid_interval / 2:
+                                cell_y.append(1)
+                            else:
+                                cell_y.append(0)
+
+                        for m in range(0, size_x):
+                            if x_0 >= lo[m] and x_0 <= lo[m + 1]:
+                                if (lo[m + 1] - x_0) >= grid_interval / 2:
+                                        # Count the cell only when the point
+                                        # (and then the image) covers more
+                                        # than 50%.
+                                    cell_x.append(m)
+                                else:
+                                    cell_x.append(m + 1)
+                            elif x_0 < -180:
+                            # This means that the down left point of the image
+                            # falls outside of the borders of the map
+                                if extra_x == []:
+                                    # I want to count the part of the image
+                                    # that captures the globe from
+                                    # the other side
+                                    full_extra = 0
+                                    sub_div = (abs(x_0) - 180) / grid_interval
+                                    # sub_div = subtraction_division
+                                    full_extra, decimal = divmod(sub_div, 1)
+                                    if decimal >= 0.5:
+                                        full_extra += 1
+                                    full_extra = int(full_extra)
+                                    for f in range(1, full_extra + 1):
+                                        extra_x.append(size_x - f)
+                                    cell_x.append(0)
+
+                            if x_1 >= lo[m] and x_1 <= lo[m + 1]:
+                                if (x_1 - lo[m]) >= grid_interval / 2:
+                                    cell_x.append(m)
+                                    break
+                                else:
+                                    cell_x.append(m - 1)
+                                    break
+                        if x_1 > 180:  
+                        # This condition is out of the for loop in order
+                        # to make sure that the first element in cell_y
+                        # will be the x_0 and not the x_1.
+                            full_extra = 0
+                            sub_div = (abs(x_1) - 180) / grid_interval
+                            full_extra, decimal = divmod(sub_div, 1)
+                            if decimal >= 0.5:
+                                full_extra += 1
+                            full_extra = int(full_extra)
+                            for f in range(0, full_extra):
+                                extra_x.append(f)
+                            cell_x.append(size_x - 1)
+							...
+\end{lstlisting}
+\end{center}
+
+\def\dashfill{\cleaders\hbox{-}\hfill}
+\hbox to \hsize{\dashfill\hfil}
+
+The section of how a connection pool is established for the database is presented.
 \begin{center}
 \begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true] 
 
@@ -455,8 +893,7 @@ The code written for importing data to the database is followed. Below it can be
 \begin{center}
 \begin{lstlisting}[language=Python, formfeed=\newpage, extendedchars=true]
 
-TLE = '1 46825U 20061BQ  20344.95929060  .00003744  00000-0  20456-3
-09995 2 46825  97.4645  56.2899 0005339 282.0443  78.0188 15.14907924  6374'
+TLE = '...'
 
 epoch = TLE[18:32]
 i = float(TLE[79:86])
